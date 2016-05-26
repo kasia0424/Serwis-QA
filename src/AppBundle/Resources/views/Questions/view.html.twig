@@ -1,0 +1,46 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('questions') }}" title="questions"><- Back to questions list</a>
+    <h1> Question Details</h1>
+    {% if data|length %}
+        <h2 class="title"> Title: {{ data.title }} </h2> 
+        <button class="edit"><a href="{{ url('questions-edit', { 'id' : data.id }) }}" title="edit">edit</a></button>  
+        <button class="delete"><a href="{{ url('questions-delete', { 'id' : data.id }) }}" title="delete">delete</a></button>
+        <div class="clear"></div>
+        <span class="date">{{ data.date|date("d.m.Y") }}</span> 
+        <p class="category">Category: 
+            {% if category|length %}
+                <a href="{{ url('categories-view', { 'id' : category.id }) }}" title="view">
+                    {{ category.name }}
+                </a>
+            {% else %}
+                -
+            {% endif %}
+        </p>
+        <p>{{ data.content }} </p>
+        <ul class="tags"> Tags:
+            {% if tags|length %}
+                {% for row in tags %}
+                    <li>
+                        <a href="{{ url('tags-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+        <div>
+            Odpowiedzi: <button><a href="{{ url('answers-add') }}" title="add">Add answer</a></button>
+            {% if answers|length %}
+                {% for row in answers %}
+                    <section class="odp">on {{ row.date|date("d.m.Y") }} <br/>wrote: {{ row.content }}</section>
+                {% endfor %}
+            {% else %}
+                Nie ma jeszcze odpowiedzi.
+            {% endif %}
+        <div>
+    {% else %}
+        <div> No data, sorry!</div>
+    {% endif %}
+{% endblock %}

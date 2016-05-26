@@ -1,0 +1,31 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('answers') }}" title="answers"><- Back to answers list</a>
+    <h1> Answer Details</h1>
+    {% if data|length %}
+        <table>
+            <tr>
+                <th>Question title</th>
+                <th>Answer</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>
+                    {# {% for row in questions %} #}
+                        {{ question.title }}
+                    {# {% endfor %} #}
+                </td>
+                <td>{{ data.content }}</td>
+                <td>{{ data.date|date('d.m.Y') }}</td>
+                <td>
+                    <a href="{{ url('answers-edit', { 'id' : data.id }) }}" title="edit">edit</a><br/>
+                    <a href="{{ url('answers-delete', { 'id' : data.id }) }}" title="delete">delete</a>
+                </td>
+            </tr>
+        </table>
+    {% else %}
+        <div> No data, sorry!</div>
+    {% endif %}
+{% endblock %}

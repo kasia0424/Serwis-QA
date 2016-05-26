@@ -1,0 +1,7 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <h2>Edit Question</h2>
+    <div>{{ form_errors(form) }}</div>
+    {{ form(form, {'method': 'POST'}) }}
+{% endblock %}

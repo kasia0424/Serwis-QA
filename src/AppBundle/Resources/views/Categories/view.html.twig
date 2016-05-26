@@ -1,0 +1,42 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('categories') }}" title="categories"><- Back to categories list</a>
+    <h1> Category Details</h1>
+    {% if data|length %}
+        <table>
+            <tr>
+                <th>Category Name</th>
+                <th>Category Description</th>
+                <th>Category Questions</th>
+            </tr>
+            <tr>
+                <td>{{ data.name }}</td>
+                <td>
+                    {% if data.description|length %}
+                        {{ data.description }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if data.questions|length %}
+                        <ul>
+                        {% for row in data.questions %}
+                            <li>
+                                <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                                    {{ row.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    {% else %}
+        <div> No data, sorry!</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <h1> {{ 'questions.list.title'|trans }}</h1>
+    <button class="add"><a href="{{ url('questions-add') }}" title="add">Add</a></button>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {% if data|length %}
+        <table>
+        <tr>
+            <th>Question Title </th>
+            <th>Question Content </th>
+            <th>Question Date </th>
+            <th>Actions</th>
+        </tr>
+        {% for row in data %}
+                <tr>
+                    <td>
+                        {{ row.title }} 
+                        (<a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.answers|length }}
+                        </a>)
+                    </td>
+                    <td>{{ row.content }}</td>
+                    <td>{{ row.date|date("m/d/Y") }}</td>
+                    <td>
+                        <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">Check answers</a><br/>
+                        <a href="{{ url('questions-edit', { 'id' : row.id }) }}" title="edit">edit</a><br/>
+                        <a href="{{ url('questions-delete', { 'id' : row.id }) }}" title="delete">delete</a>
+                    </td>
+                </tr>
+        {%  endfor %}
+        </table>
+    {% else %}
+        <div> No data, sorry!</div>
+    {% endif %}
+{% endblock %}
+

@@ -1,0 +1,8 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('tags') }}" title="tags"><- Back to tags list</a>
+    <h2>Add Tag</h2>
+    <div>{{ form_errors(form) }}</div>
+    {{ form(form, {'method': 'POST'}) }}
+{% endblock %}

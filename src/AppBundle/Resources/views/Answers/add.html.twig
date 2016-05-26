@@ -1,0 +1,8 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('answers') }}" title="answers"><- Back to answers list</a>
+    <h2>Add Answer</h2>
+    <div>{{ form_errors(form) }}</div>
+    {{ form(form, {'method': 'POST'}) }}
+{% endblock %}

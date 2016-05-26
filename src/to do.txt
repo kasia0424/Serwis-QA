@@ -1,0 +1,18 @@
+Userzy
+- rejestr
+- do pyt i odp
+- profil
+- konto admina
+
+Autoryzacja
+
+Bezpieczeñstwo - catche, walidacja
+404, 500
+style
+
+zdjêcia??
+paginacja??
+
+Odp
+- add - do konkretnego pyt
+- bez edit?

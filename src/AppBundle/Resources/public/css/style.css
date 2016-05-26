@@ -1,0 +1,68 @@
+body {
+    margin-top: 0;
+    padding-top: 0;
+}
+nav{
+    width: 100%;
+    border-bottom: 2px solid black;
+    height: 30px;
+}
+nav li{
+    list-style: none;
+    float: left;
+    display: inline-block;
+    padding: 0 20px;
+    font-weight: bold;
+    margin: auto;
+}
+nav a {
+    color: black;
+    
+}
+.clear {
+    clear: both;
+    content: " "
+}
+h1 {
+    color: darkblue;
+    text-transform: uppercase;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid lightgrey;
+}
+label {
+    padding-right: 5px;
+}
+/* button.edit {
+    background-image: url('../@AppBundle/Resources/public/img/edit-icon.png');
+} */
+button.add {
+    margin-bottom: 10px;
+}
+.title {
+    float: left;
+    margin-bottom: 0px;
+}
+.date {
+    float: left;
+    padding-right: 10px;
+}
+.date, .category {
+    font-size: 0.75em;
+}
+.tags {
+    padding-left: 0;
+}
+.tags li {
+    display: inline;
+    background-color: lightgray;
+    border: 1px solid black;
+    padding: 3px;
+    margin: 0 2px;
+}
+.odp {
+    padding: 5px;
+    border: 1px solid black;
+    margin: 5px;
+}

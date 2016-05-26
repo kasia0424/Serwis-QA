@@ -1,0 +1,8 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('categories') }}" title="categories"><- Back to categories list</a>
+    <h2>Add Category</h2>
+    <div>{{ form_errors(form) }}</div>
+    {{ form(form, {'method': 'POST'}) }}
+{% endblock %}

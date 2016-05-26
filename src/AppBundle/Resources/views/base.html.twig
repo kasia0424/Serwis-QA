@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Q&A serwis{% endblock %}</title>
+    {% block stylesheets %}
+        {% stylesheets '@bootstrap_css' '@AppBundle/Resources/public/css/*' %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+    {% endblock %}
+    <link rel="icon" type="image/png" href="https://cdn2.iconfinder.com/data/icons/business-and-finance-41/100/question_quiz_mark_bubble_ask_qa-128.png">
+</head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="{{ url('tags') }}" title="Tags">Tags</a></li>
+                <li><a href="{{ url('categories') }}" title="Categories">Categories</a></li>
+                <li><a href="{{ url('questions') }}" title="Questions">Questions</a></li>
+                <li><a href="{{ url('answers') }}" title="Answers">Answers</a></li>
+            </ul>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <p>Logged in as: {{ app.user.username }} 
+                <a href="{{ url('logout') }}" title="Logout">Log out</a></p>
+            {% else %}
+                <a href="{{ url('register') }}" title="Register">Register</a> or
+                <a href="{{ url('login') }}" title="Login">Login</a>
+            {% endif %}
+        </nav>
+        <div class="clear"></div>
+
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+
+        {% block javascripts %}
+            {% javascripts '@jquery' '@bootstrap_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock %}
+    </body>
+</html>

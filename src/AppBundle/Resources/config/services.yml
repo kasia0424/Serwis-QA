@@ -1,0 +1,87 @@
+services:
+    app.tag_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Tag
+
+    app.tag_form:
+        class: AppBundle\Form\TagType
+        tags:
+            - { name: form.type, alias: tag }
+
+    app.tags_controller:
+        class: AppBundle\Controller\TagsController
+        arguments:
+            - @translator
+            - @templating
+            - @session
+            - @router
+            - @app.tag_repository
+            - @app.question_repository
+            - @form.factory
+
+    app.category_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Category
+    app.category_form:
+        class: AppBundle\Form\CategoryType
+        tags:
+            - { name: form.type, alias: category }
+    app.categories_controller:
+        class: AppBundle\Controller\CategoriesController
+        arguments:
+           - @translator
+           - @templating
+           - @session
+           - @router
+           - @app.category_repository
+           - @form.factory
+
+    app.question_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Question
+    app.question_form:
+        class: AppBundle\Form\QuestionType
+        tags:
+            - { name: form.type, alias: question }
+    app.questions_controller:
+        class: AppBundle\Controller\QuestionsController
+        arguments:
+           - @translator
+           - @templating
+           - @session
+           - @router
+           - @app.question_repository
+           - @app.tag_repository
+           - @app.category_repository
+           - @app.answer_repository
+           - @form.factory
+
+    app.answer_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Answer
+    app.answer_form:
+        class: AppBundle\Form\AnswerType
+        tags:
+            - { name: form.type, alias: answer }
+    app.answers_controller:
+        class: AppBundle\Controller\AnswersController
+        arguments:
+           - @translator
+           - @templating
+           - @session
+           - @router
+           - @app.question_repository
+           - @app.answer_repository
+           - @form.factory

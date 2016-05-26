@@ -1,0 +1,34 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <a href="{{ url('tags') }}" title="tags"><- Back to tags list</a>
+    <h1> Tag Details</h1>
+    {% if data|length %}
+        <table>
+            <tr>
+                <th>Tag Name</th>
+                <th>Tagged Questions</th>
+            </tr>
+            <tr>
+                <td>{{ data.name }}</td>
+                <td>
+                    {% if data.questions|length %}
+                        <ul>
+                        {% for row in data.questions %}
+                            <li>
+                                <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                                    {{ row.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    {% else %}
+        <div> No data, sorry!</div>
+    {% endif %}
+{% endblock %}
