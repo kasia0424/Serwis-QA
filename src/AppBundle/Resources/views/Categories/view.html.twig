@@ -1,42 +1,50 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
-    <a href="{{ url('categories') }}" title="categories"><- Back to categories list</a>
-    <h1> Category Details</h1>
+<div class="container">
+    <a href="{{ url('categories') }}" title="categories">&lt;- {{ 'list.back'|trans }}</a>
     {% if data|length %}
-        <table>
+        <h1> {{ data.name }}{{ 'details'|trans }} </h1>
+        {% if data.description|length %}
+            <p>
+                {{ data.description }}
+            </p>
+        {% endif %}
+        
+        {% if data.questions|length %}
+            <table>
             <tr>
-                <th>Category Name</th>
-                <th>Category Description</th>
-                <th>Category Questions</th>
+                <th>Question Title </th>
+                <th>Question Content </th>
+                
+                <th>Actions</th>
             </tr>
-            <tr>
-                <td>{{ data.name }}</td>
-                <td>
-                    {% if data.description|length %}
-                        {{ data.description }}
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-                <td>
-                    {% if data.questions|length %}
-                        <ul>
-                        {% for row in data.questions %}
-                            <li>
-                                <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
-                                    {{ row.title }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
+            {% for row in data.questions %}
+                    <tr class="colored">
+                        <td>
+                            <span class="date">{{ row.date|date("m/d/Y") }}</span><br/><br/>
+                            {{ row.title }} 
+                            (<a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                                {{ row.answers|length }}
+                            </a>)
+                        </td>
+                        <td>{{ row.content }}</td>
+                        <td>
+                            <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">Check answers  -></a><br/>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == row.user.id %}
+                                <button class="edit"><a href="{{ url('questions-edit', { 'id' : row.id }) }}" title="edit">edit</a></button><br/>
+                                <button><a href="{{ url('questions-delete', { 'id' : row.id }) }}" title="delete">delete</a></button>
+                            {% endif %}
+                        </td>
+                    </tr>
+            {%  endfor %}
+            </table>
+        {% else %}
+            <div> {{ 'data.no'|trans }}</div>
+        {% endif %}
+
     {% else %}
-        <div> No data, sorry!</div>
+        <div>  {{ 'data.no'|trans }}</div>
     {% endif %}
+</div>
 {% endblock %}

@@ -22,6 +22,7 @@ use AppBundle\Form\DataTransformer\CategoryDataTransformer;
  */
 class AnswerType extends AbstractType
 {
+
     /**
      * Form builder.
      *
@@ -30,7 +31,7 @@ class AnswerType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $tagDataTransformer = new TagDataTransformer($options['question_model']);
+
 
         $builder->add(
             'id',
@@ -47,16 +48,6 @@ class AnswerType extends AbstractType
                     'label'      => 'Answer content',
                     'required'   => true,
                     'max_length' => 128,
-                )
-            );
-            $builder->add(
-                'question',
-                'entity',
-                array(
-                    'class' => 'AppBundle:Question',
-                    'property' => 'title',
-                    'multiple' => false,
-                    'expanded' => true
                 )
             );
         }
@@ -82,13 +73,7 @@ class AnswerType extends AbstractType
                 'validation_groups' => 'answer-default',
             )
         );
-        $resolver->setRequired(array('question_model'));
-        $resolver->setAllowedTypes(
-            array(
-                'question_model' => 'Doctrine\Common\Persistence\ObjectRepository'
-            )
-        );
-        
+
     }
 
     /**

@@ -1,7 +1,10 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
+<div class="container">
+    <a href="{{ url('questions') }}" title="questions">&lt;- Back to questions list</a>
     <h2>Delete Question: {{question.title}}</h2>
     <div>{{ form_errors(form) }}</div>
     {{ form(form, {'method': 'POST'}) }}
+</div>
 {% endblock %}

@@ -8,8 +8,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Answer;
 use AppBundle\Entity\Question;
 use AppBundle\Form\QuestionType;
+use AppBundle\Form\AnswerType;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -92,9 +94,16 @@ class QuestionsController
     /**
      * Form factory.
      *
-     * @var FormFactory $formFactory
+     * @var FormFactory $q_formFactory
      */
-    private $formFactory;
+    private $q_formFactory;
+    
+    /**
+     * Form factory.
+     *
+     * @var FormFactory $a_formFactory
+     */
+    private $a_formFactory;
 
     /**
      * QuestionsController constructor.
@@ -107,7 +116,8 @@ class QuestionsController
      * @param ObjectRepository $tagsModel Model object
      * @param ObjectRepository $categoriesModel Model object
      * @param ObjectRepository $answersModel Model object
-     * @param FormFactory $formFactory Form factory
+     * @param FormFactory $q_formFactory Form factory
+     * @param FormFactory $a_formFactory Form factory
      */
     public function __construct(
         Translator $translator,
@@ -118,7 +128,8 @@ class QuestionsController
         ObjectRepository $tagsModel,
         ObjectRepository $categoriesModel,
         ObjectRepository $answersModel,
-        FormFactory $formFactory
+        FormFactory $q_formFactory,
+        FormFactory $a_formFactory
     ) {
         $this->translator = $translator;
         $this->templating = $templating;
@@ -128,7 +139,8 @@ class QuestionsController
         $this->tagsModel = $tagsModel;
         $this->categoriesModel = $categoriesModel;
         $this->answersModel = $answersModel;
-        $this->formFactory = $formFactory;
+        $this->q_formFactory = $q_formFactory;
+        $this->a_formFactory = $a_formFactory;
     }
 
     /**
@@ -193,7 +205,7 @@ class QuestionsController
      */
     public function addAction(Request $request)
     {
-        $questionForm = $this->formFactory->create(
+        $questionForm = $this->q_formFactory->create(
             new questionType(),
             null,
             array(
@@ -222,6 +234,65 @@ class QuestionsController
             array('form' => $questionForm->createView())
         );
     }
+    
+    
+    /**
+     * Add answer action.
+     *
+     * @Route("/questions/{id}/answer-add", name="answer-add")
+     * @Route("/questions/{id}/answer-add/")
+     * @ParamConverter("question", class="AppBundle:Question")
+     *
+     * @param question $question question entity
+     * @param Request $request
+     * @return Response A Response instance
+     */
+     // public function addAnswerAction(Request $request, question $question = null)
+     // {
+         // $id = (integer)$request->get('id', null);
+
+         // if (!$question) {
+             // $this->session->getFlashBag()->set(
+                 // 'warning',
+                 // $this->translator->trans('questions.messages.question_not_found')
+             // );
+             // return new RedirectResponse(
+                 // $this->router->generate('questions-add')
+             // );
+         // }
+
+         // $answer = new Answer();
+         // $answer->setQuestion($question);
+
+
+
+         // $answerForm = $this->a_formFactory->create(
+             // new AnswerType(),
+            // $answer,
+            // array(
+            // 'validation_groups' => 'answer-default',
+             // )
+         // );
+
+         // $answerForm->handleRequest($request);
+
+         // if ($answerForm->isValid()) {
+             // $answer = $answerForm->getData();
+             // $this->answersModel->save($answer, $id);
+             // $this->session->getFlashBag()->set(
+                 // 'success',
+                 // $this->translator->trans('answers.messages.success.add')
+             // );
+             // return new RedirectResponse(
+                 // $this->router->generate('questions')
+             // );
+         // }
+
+         // return $this->templating->renderResponse(
+             // 'AppBundle:Answers:add.html.twig',
+             // array('form' => $answerForm->createView())
+         // );
+     // }
 
     /**
      * Edit action.
@@ -246,7 +317,7 @@ class QuestionsController
             );
         }
 
-        $questionForm = $this->formFactory->create(
+        $questionForm = $this->q_formFactory->create(
             new questionType(),
             $question,
             array(
@@ -300,7 +371,7 @@ class QuestionsController
             );
         }
 
-        $questionForm = $this->formFactory->create(
+        $questionForm = $this->q_formFactory->create(
             new questionType(),
             $question,
             array(

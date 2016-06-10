@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Answer;
+use AppBundle\Entity\Question;
 use AppBundle\Form\AnswerType;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -162,20 +163,35 @@ class AnswersController
     /**
      * Add action.
      *
-     * @Route("/answers/add", name="answers-add")
-     * @Route("/answers/add/")
+     * @Route("/questions/{id}/answer-add", name="answers-add")
+     * @Route("/questions/{id}/answer-add/")
+     * @ParamConverter("question", class="AppBundle:Question")
      *
+     * @param question $question question entity
      * @param Request $request
      * @return Response A Response instance
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, Question $question = null)
     {
+        $id = (integer)$request->get('id', null);
+        // if (!$question) {
+             // $this->session->getFlashBag()->set(
+                 // 'warning',
+                 // $this->translator->trans('questions.messages.question_not_found')
+             // );
+             // return new RedirectResponse(
+                 // $this->router->generate('questions-add')
+             // );
+         // }
+// var_dump($question);die();
+        $answer = new Answer();
+        $answer->setQuestion($question);
+    
         $answerForm = $this->formFactory->create(
             new AnswerType(),
-            null,
+            $answer,
             array(
-                'validation_groups' => 'answer-default',
-                'question_model' => $this->questionsModel
+                'validation_groups' => 'answer-default'
             )
         );
 
@@ -189,8 +205,8 @@ class AnswersController
                 $this->translator->trans('answers.messages.success.add')
             );
             return new RedirectResponse(
-                $this->router->generate('answers')
-            );
+               $this->router->generate('questions-view', array('id' => $id))
+           );
         }
 
         return $this->templating->renderResponse(

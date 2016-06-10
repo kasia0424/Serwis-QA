@@ -1,6 +1,7 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
+<div class="container">
     <h1> {{ 'questions.list.title'|trans }}</h1>
     <button class="add"><a href="{{ url('questions-add') }}" title="add">Add</a></button>
     {% for type, messages in app.session.flashbag.all %}
@@ -15,23 +16,27 @@
         <tr>
             <th>Question Title </th>
             <th>Question Content </th>
-            <th>Question Date </th>
+            
             <th>Actions</th>
         </tr>
         {% for row in data %}
-                <tr>
+                <tr class="colored">
                     <td>
-                        {{ row.title }} 
+                        <span class="date">{{ row.date|date("m/d/Y") }}</span><br/><br/>
+                        <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.title }} 
+                        </a>
                         (<a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
                             {{ row.answers|length }}
                         </a>)
                     </td>
                     <td>{{ row.content }}</td>
-                    <td>{{ row.date|date("m/d/Y") }}</td>
                     <td>
-                        <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">Check answers</a><br/>
-                        <a href="{{ url('questions-edit', { 'id' : row.id }) }}" title="edit">edit</a><br/>
-                        <a href="{{ url('questions-delete', { 'id' : row.id }) }}" title="delete">delete</a>
+                        <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">Check answers  -></a><br/>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id %}{# == row.user.id %} #}
+                            <button class="edit"><a href="{{ url('questions-edit', { 'id' : row.id }) }}" title="edit">edit</a></button><br/>
+                            <button><a href="{{ url('questions-delete', { 'id' : row.id }) }}" title="delete">delete</a></button>
+                        {% endif %}
                     </td>
                 </tr>
         {%  endfor %}
@@ -39,5 +44,6 @@
     {% else %}
         <div> No data, sorry!</div>
     {% endif %}
+</div>
 {% endblock %}
 

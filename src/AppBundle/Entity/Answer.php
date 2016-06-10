@@ -78,7 +78,7 @@ class Answer
      *      targetEntity="Question",
      *      inversedBy="answers"
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(name="question_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $question
      */

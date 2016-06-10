@@ -1,8 +1,10 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
-    <a href="{{ url('categories') }}" title="categories"><- Back to categories list</a>
+<div class="container">
+    <a href="{{ url('categories') }}" title="categories">&lt;- {{ 'list.back'|trans }}</a>
     <h2>Delete Category: {{category.name}}</h2>
     <div>{{ form_errors(form) }}</div>
     {{ form(form, {'method': 'POST'}) }}
+</div>
 {% endblock %}

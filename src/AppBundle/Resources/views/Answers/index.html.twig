@@ -1,8 +1,9 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
+<div class="container list">
     <h1> {{ 'answers.list.title'|trans }}</h1>
-    <button class="add"><a href="{{ url('answers-add') }}" title="add">Add</a></button>
+    {# <button class="add"><a href="{{ url('answers-add') }}" title="add">Add</a></button> #}
     {% for type, messages in app.session.flashbag.all %}
         <div class="alert alert-{{ type }}" role="alert">
             {% for message in messages %}
@@ -13,16 +14,22 @@
     {% if data|length %}
         <table>
         <tr>
-            <th>Answer Name </th>
+            <th>Answer </th>
             <th>Actions</th>
         </tr>
         {% for row in data %}
-                <tr>
-                    <td>{{ row.content }}</td>
+                <tr class="colored">
+                    <td>
+                        <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.content }}
+                        </a>
+                    </td>
                     <td>
                         <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">view</a><br/>
-                        <a href="{{ url('answers-edit', { 'id' : row.id }) }}" title="edit">edit</a><br/>
-                        <a href="{{ url('answers-delete', { 'id' : row.id }) }}" title="delete">delete</a>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id %} {# == row.user.id %} #}
+                            <a href="{{ url('answers-edit', { 'id' : row.id }) }}" title="edit">edit</a><br/>
+                            <a href="{{ url('answers-delete', { 'id' : row.id }) }}" title="delete">delete</a>
+                        {% endif %}
                     </td>
                 </tr>
         {%  endfor %}
@@ -30,5 +37,6 @@
     {% else %}
         <div> No data, sorry!</div>
     {% endif %}
+</div>
 {% endblock %}
 

@@ -51,7 +51,11 @@ services:
     app.question_form:
         class: AppBundle\Form\QuestionType
         tags:
-            - { name: form.type, alias: question }
+            - { name: form.q_type, alias: question }
+    app.question_answer_form:
+        class: AppBundle\Form\AnswerType
+        tags:
+            - { name: form.a_type, alias: answer }
     app.questions_controller:
         class: AppBundle\Controller\QuestionsController
         arguments:
@@ -63,6 +67,7 @@ services:
            - @app.tag_repository
            - @app.category_repository
            - @app.answer_repository
+           - @form.factory
            - @form.factory
 
     app.answer_repository:

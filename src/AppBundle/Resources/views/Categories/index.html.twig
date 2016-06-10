@@ -1,8 +1,10 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
-    <h1> {{ 'categories.list.title'|trans }}</h1>
-    <button class="add"><a href="{{ url('categories-add') }}" title="add">Add</a></button>
+<div class="container list">
+    <h1> {{ 'list'|trans }} {{ 'categories.bier'|trans }}</h1>
+    <button class="add"><a href="{{ url('categories-add') }}" title="add">{{ 'add'|trans }}</a></button>
+    <div class="clear"></div>
     {% for type, messages in app.session.flashbag.all %}
         <div class="alert alert-{{ type }}" role="alert">
             {% for message in messages %}
@@ -11,24 +13,41 @@
         </div>
     {% endfor %}
     {% if data|length %}
-        <table>
-        <tr>
-            <th>Category Name </th>
-            <th>Actions</th>
-        </tr>
         {% for row in data %}
-                <tr>
-                    <td>{{ row.name }}</td>
-                    <td>
-                        <a href="{{ url('categories-view', { 'id' : row.id }) }}" title="view">view</a><br/>
-                        <a href="{{ url('categories-edit', { 'id' : row.id }) }}" title="edit">edit</a><br/>
-                        <a href="{{ url('categories-delete', { 'id' : row.id }) }}" title="delete">delete</a>
-                    </td>
-                </tr>
-        {%  endfor %}
-        </table>
+            <div class="bordered col-sm-4 colored">
+                <p>
+                    <button><a href="{{ url('categories-view', { 'id' : row.id }) }}" title="view">{{ 'view'|trans }}</a></button>
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <button><a href="{{ url('categories-delete', { 'id' : row.id }) }}" title="delete">{{ 'delete'|trans }}</a></button>
+                        <button><a href="{{ url('categories-edit', { 'id' : row.id }) }}" title="edit">{{ 'edit'|trans }}</a></button>
+                    {% endif %}
+                    <strong>{{ row.name }}</strong><br/>
+                    <small>{{ row.description }}</small>
+                </p>
+
+                <div class="clear"></div>
+                {% if row.questions|length %}
+                    <ul class="bordered">
+                        {% for q in row.questions %}
+                            {% if loop.index != 4 %}
+                                <li>
+                                    <a href="{{ url('questions-view', { 'id' : q.id }) }}" title="view">
+                                        {{q.title}}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ url('categories-view', { 'id' : row.id }) }}" title="view">Check more questions -></a>
+                {% else %}
+                    <p class="bordered"> No questions in this category yet.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
     {% else %}
         <div> No data, sorry!</div>
     {% endif %}
+</div>
 {% endblock %}
 

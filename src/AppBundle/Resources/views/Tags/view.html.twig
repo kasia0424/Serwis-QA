@@ -1,12 +1,13 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
-    <a href="{{ url('tags') }}" title="tags"><- Back to tags list</a>
-    <h1> Tag Details</h1>
+<div class="container">
+    <a href="{{ url('tags') }}" title="tags">&lt; {{ 'list.back'|trans }}</a>
     {% if data|length %}
+        <h1> {{ data.name }}{{ 'details'|trans }}</h1>
         <table>
             <tr>
-                <th>Tag Name</th>
+                <th>{{ 'name'|trans }}</th>
                 <th>Tagged Questions</th>
             </tr>
             <tr>
@@ -29,6 +30,7 @@
             </tr>
         </table>
     {% else %}
-        <div> No data, sorry!</div>
+        <div> {{ 'data.no'|trans }}</div>
     {% endif %}
+</div>
 {% endblock %}

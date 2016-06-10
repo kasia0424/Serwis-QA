@@ -22,11 +22,21 @@ class Answer extends EntityRepository
      *
      * @param Answer $answer Answer object
      */
-    public function save(\AppBundle\Entity\Answer $answer)
-    {
-        $this->_em->persist($answer);
-        $this->_em->flush();
-    }
+   public function save(\AppBundle\Entity\Answer $answer)
+   {
+       $this->_em->persist($answer);
+       $this->_em->flush();
+   }
+    // public function save(\AppBundle\Entity\Answer $answer, $id)
+    // {
+        // $em = $this->getEntityManager();
+        // $question = $em->getRepository('AppBundle:Question')->findOneById($id);
+// //        $answer->setAuthor($user);
+        // $answer->setQuestion($question);
+        // $this->_em->persist($answer);
+        // $this->_em->flush();
+    // }
+
 
     /**
      * Delete answer object.

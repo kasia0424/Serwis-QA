@@ -1,8 +1,11 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
+<div class="container list">
     <h1> {{ 'tags.list.title'|trans }}</h1>
-    <button class="add"><a href="{{ url('tags-add') }}" title="add">Add</a></button>
+    <button class="add"><a href="{{ url('tags-add') }}" title="add">{{ 'add'|trans }}</a></button>
+    <div class="clear"></div>
+    
     {% for type, messages in app.session.flashbag.all %}
         <div class="alert alert-{{ type }}" role="alert">
             {% for message in messages %}
@@ -11,24 +14,35 @@
         </div>
     {% endfor %}
     {% if data|length %}
-        <table>
-        <tr>
-            <th>Tag Name </th>
-            <th>Actions</th>
-        </tr>
         {% for row in data %}
-                <tr>
-                    <td>{{ row.name }}</td>
-                    <td>
-                        <a href="{{ url('tags-view', { 'id' : row.id }) }}" title="view">view</a><br/>
-                        <a href="{{ url('tags-edit', { 'id' : row.id }) }}" title="edit">edit</a><br/>
-                        <a href="{{ url('tags-delete', { 'id' : row.id }) }}" title="delete">delete</a>
-                    </td>
-                </tr>
-        {%  endfor %}
-        </table>
+            <div class="bordered col-sm-4 colored">
+                <p>
+                    <strong >{{ row.name }}</strong>
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        {# <button><a href="{{ url('tags-view', { 'id' : row.id }) }}" title="view">{{ 'view'|trans }}</a></button> #}
+                        <button class="edit"><a href="{{ url('tags-edit', { 'id' : row.id }) }}" title="edit">{{ 'edit'|trans }}</a></button>
+                        <button class="delete"><a href="{{ url('tags-delete', { 'id' : row.id }) }}" title="delete">{{ 'delete'|trans }}</a></button>
+                    {% endif %}
+                </p>
+                    {% if row.questions|length %}
+                        <ul class="bordered">{% for q in row.questions %}
+                            <li>
+                                <a href="{{ url('questions-view', { 'id' : q.id }) }}" title="view">
+                                    {{q.title}}
+                                </a>
+                            </li>
+                        {% endfor %}</ul>
+                    {% else %}
+                        <p>Brak przypisanych pytań.</p>
+                    {% endif %}
+                
+            </div>
+        {% endfor %}
+        <div class="clear"></div>
+        
     {% else %}
         <div> No data, sorry!</div>
     {% endif %}
+</div>
 {% endblock %}
 
