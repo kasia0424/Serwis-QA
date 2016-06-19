@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Answer;
 use AppBundle\Entity\Question;
+use AppBundle\Entity\User;
 use AppBundle\Form\QuestionType;
 use AppBundle\Form\AnswerType;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -24,6 +25,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use FOS\UserBundle\Model\UserInterface;
+
+
 
 /**
  * Class QuestionsController.
@@ -104,6 +111,7 @@ class QuestionsController
      * @var FormFactory $a_formFactory
      */
     private $a_formFactory;
+    
 
     /**
      * QuestionsController constructor.
@@ -141,6 +149,25 @@ class QuestionsController
         $this->answersModel = $answersModel;
         $this->q_formFactory = $q_formFactory;
         $this->a_formFactory = $a_formFactory;
+        
+        // $this->securityContext = $securityContext;
+        // $token = $securityContext->getToken();
+        
+         // if (null !== $token && is_object($token->getUser())) {
+            // $this->current_user = $token->getUser();
+            // $user_id = $this->current_user->getUsername();
+
+
+            // $login = $this->userModel->findOneByUsername($user_id);
+            // $this->user_author = $login;
+          // //  var_dump($user_id);
+          // //  var_dump($login);
+          // //  die();
+        // } else {
+            // $this->current_user = null;
+        // }
+
+
     }
 
     /**
@@ -205,6 +232,20 @@ class QuestionsController
      */
     public function addAction(Request $request)
     {
+        // $userManager = $this->get('fos_user.user_manager');
+        // $user = $userManager->createUser();
+        // var_dump($user);die();
+        // $user = new User();
+        // $userID = $user->getUser()->getId();
+        // $this->get('fos_user.user_manager');
+        // $user = $this->get('security.token_storage')->getToken()->getUser();
+        // $userManager = $container->get('fos_user.user_manager');
+        // $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->questionsModel->getUser();
+        // $user = $this->questionsModel->get('security.context')->getToken()->getUser();
+        $userId = $user->getId();
+        var_dump($user);die();
+        
         $questionForm = $this->q_formFactory->create(
             new questionType(),
             null,
@@ -234,65 +275,6 @@ class QuestionsController
             array('form' => $questionForm->createView())
         );
     }
-    
-    
-    /**
-     * Add answer action.
-     *
-     * @Route("/questions/{id}/answer-add", name="answer-add")
-     * @Route("/questions/{id}/answer-add/")
-     * @ParamConverter("question", class="AppBundle:Question")
-     *
-     * @param question $question question entity
-     * @param Request $request
-     * @return Response A Response instance
-     */
-     // public function addAnswerAction(Request $request, question $question = null)
-     // {
-         // $id = (integer)$request->get('id', null);
-
-         // if (!$question) {
-             // $this->session->getFlashBag()->set(
-                 // 'warning',
-                 // $this->translator->trans('questions.messages.question_not_found')
-             // );
-             // return new RedirectResponse(
-                 // $this->router->generate('questions-add')
-             // );
-         // }
-
-         // $answer = new Answer();
-         // $answer->setQuestion($question);
-
-
-
-         // $answerForm = $this->a_formFactory->create(
-             // new AnswerType(),
-            // $answer,
-            // array(
-            // 'validation_groups' => 'answer-default',
-             // )
-         // );
-
-         // $answerForm->handleRequest($request);
-
-         // if ($answerForm->isValid()) {
-             // $answer = $answerForm->getData();
-             // $this->answersModel->save($answer, $id);
-             // $this->session->getFlashBag()->set(
-                 // 'success',
-                 // $this->translator->trans('answers.messages.success.add')
-             // );
-             // return new RedirectResponse(
-                 // $this->router->generate('questions')
-             // );
-         // }
-
-         // return $this->templating->renderResponse(
-             // 'AppBundle:Answers:add.html.twig',
-             // array('form' => $answerForm->createView())
-         // );
-     // }
 
     /**
      * Edit action.

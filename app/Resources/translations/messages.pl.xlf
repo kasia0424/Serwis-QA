@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>logged.in</source>
+                <target>Zalogowany jako:</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>log.out</source>
+                <target>Wyloguj</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>register</source>
+                <target>Zarejestruj</target>
+            </trans-unit>
+            
+            <!-- szczegóły -->
+            <trans-unit id="2">
+                <source>details</source>
+                <target> - szczegóły</target>
+            </trans-unit>
+            <trans-unit id="21">
+                <source>data.no</source>
+                <target>Brak danych</target>
+            </trans-unit>
+            <trans-unit id="22">
+                <source>list.back</source>
+                <target>Wróć do listy</target>
+            </trans-unit>
+            <trans-unit id="23">
+                <source>list</source>
+                <target>Lista</target>
+            </trans-unit>
+            
+            <!-- formularze -->
+            <trans-unit id="3">
+                <source>name</source>
+                <target>Nazwa</target>
+            </trans-unit>
+            
+            <!-- buttony -->
+            <trans-unit id="42">
+                <source>view</source>
+                <target>Szczegóły</target>
+            </trans-unit>
+            <trans-unit id="43">
+                <source>edit</source>
+                <target>Edtuj</target>
+            </trans-unit>
+            <trans-unit id="44">
+                <source>add</source>
+                <target>Dodaj</target>
+            </trans-unit>
+            <trans-unit id="45">
+                <source>delete</source>
+                <target>Usuń</target>
+            </trans-unit>
+
+            <!-- kategorie -->
+            <trans-unit id="5">
+                <source>categories</source>
+                <target>Kategorie</target>
+            </trans-unit>
+            <trans-unit id="51">
+                <source>category.dop</source>
+                <target>Kategorię</target>
+            </trans-unit>
+            <trans-unit id="52">
+                <source>categories.bier</source>
+                <target>Kategorii</target>
+            </trans-unit>
+            <trans-unit id="53">
+                <source>category</source>
+                <target>Kategoria</target>
+            </trans-unit>
+
+            <!-- pytania -->
+            <trans-unit id="6">
+                <source>questions</source>
+                <target>Pytania</target>
+            </trans-unit>
+
+            <!-- odpowiedzi -->
+            <trans-unit id="7">
+                <source>answers</source>
+                <target>Odpowiedzi</target>
+            </trans-unit>
+
+            <!-- tagi -->
+            <trans-unit id="8">
+                <source>tags</source>
+                <target>Tagi</target>
+            </trans-unit>
+            <trans-unit id="811">
+                <source>tag</source>
+                <target>Tag</target>
+            </trans-unit>
+            <trans-unit id="81">
+                <source>tags.list.title</source>
+                <target>Lista tagów</target>
+            </trans-unit>
+            <trans-unit id="82">
+                <source>tags.list.back</source>
+                <target>Wróć do listy tagów</target>
+            </trans-unit>
+            <trans-unit id="83">
+                <source>tags.edit</source>
+                <target>Lista tagów</target>
+            </trans-unit>
+            <trans-unit id="84">
+                <source>tags.lifst.title</source>
+                <target>Lista tagów</target>
+            </trans-unit>
+            <trans-unit id="85">
+                <source>tags.ldist.title</source>
+                <target>Lista tagów</target>
+            </trans-unit>
+            
+            
+        </body>
+    </file>
+</xliff>

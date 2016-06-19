@@ -84,6 +84,19 @@ class Answer
      */
     protected $question;
 
+    /**
+     * Users array
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="User",
+     *      inversedBy="answers"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $user
+     */
+    protected $user;
+
 
     /**
      * Constructor.

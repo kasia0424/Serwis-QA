@@ -1,0 +1,12 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
+        {% if app.session is not empty %}
+            {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
+            {% if targetUrl is not empty %}<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>{% endif %}
+        {% endif %}
+        <button><a href="{{ path('fos_user_profile_show') }}" title="Profile">Check your profile</a>
+    </div>
+{% endblock body %}

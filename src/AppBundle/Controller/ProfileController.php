@@ -34,7 +34,8 @@ class ProfileController extends ContainerAware
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
-
+        $questions = $this->container->getQuestions();
+        var_dump($questions);die();
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
     }
 

@@ -27,3 +27,5 @@ login:
     path: /login
 register:
     path: /register
+register:
+    path: /profile

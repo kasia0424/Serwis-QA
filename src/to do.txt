@@ -1,18 +1,20 @@
 Userzy
-- rejestr
 - do pyt i odp
 - profil
 - konto admina
 
-Autoryzacja
+Autoryzacja - done? do kontrollerów jeszcze
 
 Bezpieczeñstwo - catche, walidacja
 404, 500
 style
 
+t³umaczenia
+
 zdjêcia??
 paginacja??
+WYSZUKIWARKA??
+Flashbagi do base.twig
 
 Odp
-- add - do konkretnego pyt
 - bez edit?

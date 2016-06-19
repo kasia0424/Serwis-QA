@@ -122,6 +122,19 @@ class Question
      * @var \Doctrine\Common\Collections\ArrayCollection $answers
      */
     protected $answers;
+    
+    /**
+     * Users array
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="User",
+     *      inversedBy="questions"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $user
+     */
+    protected $user;
 
     /**
      * Constructor.

@@ -1,0 +1,35 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="fos_user_user_show bordered">
+            <p>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}: <strong>{{ user.username }}</strong></p>
+            <p>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}: <strong>{{ user.email }}</strong></p>
+        
+            <button><a href="{{ path('fos_user_change_password') }}" title="Change password">
+                Zmiana hasła
+            </a></button>
+            <button><a href="{{ path('fos_user_profile_edit') }}">
+                Edit Profile
+            </a></button>
+        </div>
+        <div class="bordered colored">
+            <h3>Lista pytań</h3>
+            <p>
+                <span> Pytanie (2)</span>
+                <span>ostatnia odpowiedź</span>
+            </p>
+            <p>
+                <span> Pytanie (2)</span>
+                <span> ostatnia odpowiedź</span>
+            </p>
+        </div>
+        <div class="bordered colored">
+            <h3>Moje odpowiedzi</h3>
+            <p>
+                <span> Pytanie (2)</span>
+                <span> moja odpowiedź</span>
+            </p>
+        </div>
+    </div>
+{% endblock body %}

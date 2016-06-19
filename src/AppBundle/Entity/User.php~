@@ -36,6 +36,30 @@ class User extends BaseUser
      */
     protected $birthdate;
     
+    /**
+     * Questions array
+     *
+     * @ORM\OneToMany(
+     *      targetEntity="Question",
+     *      mappedBy="user"
+     * )
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $questions
+     */
+    protected $questions;
+    
+    /**
+     * Answers array
+     *
+     * @ORM\OneToMany(
+     *      targetEntity="Answer",
+     *      mappedBy="user"
+     * )
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $answers
+     */
+    protected $answers;
+    
     public function __construct()
     {
         parent::__construct();

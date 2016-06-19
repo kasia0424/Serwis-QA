@@ -68,3 +68,19 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
+        
+        - { path: ^/answers/edit/, role: ROLE_USER }
+        - { path: ^/answers/add, role: ROLE_USER }
+        - { path: ^/answers/delete/, role: ROLE_USER }
+        
+        # - { path: ^/questions/edit/, role: ROLE_USER }
+        # - { path: ^/questions/add, role: ROLE_USER }
+        # - { path: ^/questions/delete/, role: ROLE_USER }
+        
+        # - { path: ^/categories/edit/, role: ROLE_ADMIN }
+        # - { path: ^/categories/delete/, role: ROLE_ADMIN }
+        # - { path: ^/categories/add, role: ROLE_ADMIN }
+        
+        # - { path: ^/tags/edit/, role: ROLE_ADMIN }
+        # - { path: ^/tags/delete/, role: ROLE_ADMIN }
+        # - { path: ^/tags/add, role: ROLE_ADMIN }

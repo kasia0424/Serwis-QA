@@ -84,6 +84,19 @@ class Answer
      */
     protected $question;
 
+    /**
+     * Users array
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="User",
+     *      inversedBy="answers"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $user
+     */
+    protected $user;
+
 
     /**
      * Constructor.
@@ -209,5 +222,28 @@ class Answer
     {
         return $this->remove($answer);
         //$this->sections->removeElement($sections);
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     * @return Answer
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

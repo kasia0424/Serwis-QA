@@ -36,6 +36,30 @@ class User extends BaseUser
      */
     protected $birthdate;
     
+    /**
+     * Questions array
+     *
+     * @ORM\OneToMany(
+     *      targetEntity="Question",
+     *      mappedBy="user"
+     * )
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $questions
+     */
+    protected $questions;
+    
+    /**
+     * Answers array
+     *
+     * @ORM\OneToMany(
+     *      targetEntity="Answer",
+     *      mappedBy="user"
+     * )
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection $answers
+     */
+    protected $answers;
+    
     public function __construct()
     {
         parent::__construct();
@@ -198,5 +222,71 @@ class User extends BaseUser
     {
 
         return $this->plainPassword;
+    }
+
+    /**
+     * Add questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     * @return User
+     */
+    public function addQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions[] = $questions;
+
+        return $this;
+    }
+
+    /**
+     * Remove questions
+     *
+     * @param \AppBundle\Entity\Question $questions
+     */
+    public function removeQuestion(\AppBundle\Entity\Question $questions)
+    {
+        $this->questions->removeElement($questions);
+    }
+
+    /**
+     * Get questions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    /**
+     * Add answers
+     *
+     * @param \AppBundle\Entity\Answer $answers
+     * @return User
+     */
+    public function addAnswer(\AppBundle\Entity\Answer $answers)
+    {
+        $this->answers[] = $answers;
+
+        return $this;
+    }
+
+    /**
+     * Remove answers
+     *
+     * @param \AppBundle\Entity\Answer $answers
+     */
+    public function removeAnswer(\AppBundle\Entity\Answer $answers)
+    {
+        $this->answers->removeElement($answers);
+    }
+
+    /**
+     * Get answers
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
     }
 }
