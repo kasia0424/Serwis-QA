@@ -63,11 +63,9 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        // your own logic
         $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->answers = new \Doctrine\Common\Collections\ArrayCollection();
         $this->roles = array('ROLE_USER');
-        parent::__construct();
     }
 
     /**
@@ -174,19 +172,30 @@ class User extends BaseUser
         return $this->birthdate;
     }
     
-    // public function addRole($role)
-    // {
-        // $role = strtoupper($role);
-        // if ($role === static::ROLE_USER) {
-            // return $this;
-        // }
+    public function addRole($role)
+    {
+        $role = strtoupper($role);
+        if ($role === static::ROLE_USER) {
+            return $this;
+        }
 
         // if (!in_array($role, $this->roles, true)) {
             // $this->roles[] = $role;
         // }
 
-        // return $this;
-    // }
+        return $this;
+    }
+    
+    public function setRoles(array $roles)
+    {
+        $this->roles = array('ROLE_USER');
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+
+        return $this;
+    }
     
     // /**
      // * Returns the user roles
