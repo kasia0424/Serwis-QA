@@ -91,7 +91,7 @@ class Answer
      *      targetEntity="User",
      *      inversedBy="answers"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $user
      */
@@ -105,6 +105,7 @@ class Answer
     {
         $this->date = new \DateTime();
         $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -240,7 +241,7 @@ class Answer
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User 
+     * @return \AppBundle\Entity\User
      */
     public function getUser()
     {

@@ -45,7 +45,7 @@ class QuestionType extends AbstractType
                 'title',
                 'text',
                 array(
-                    'label'      => 'Question tile',
+                    'label'      => 'Tytuł',
                     'required'   => true,
                     'max_length' => 128,
                 )
@@ -54,7 +54,7 @@ class QuestionType extends AbstractType
                 'content',
                 'textarea',
                 array(
-                    'label'      => 'Question content',
+                    'label'      => 'Treść',
                     'required'   => false,
                     'max_length' => 128,
                 )
@@ -102,7 +102,7 @@ class QuestionType extends AbstractType
             'save',
             'submit',
             array(
-                'label' => 'Save'
+                'label' => 'Zapisz'
             )
         );
     }

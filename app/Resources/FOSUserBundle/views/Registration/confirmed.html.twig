@@ -2,11 +2,18 @@
 
 {% block body %}
     <div class="container">
+        {% for type, messages in app.session.flashbag.all %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endfor %}
         <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
         {% if app.session is not empty %}
             {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
             {% if targetUrl is not empty %}<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>{% endif %}
         {% endif %}
-        <button><a href="{{ path('fos_user_profile_show') }}" title="Profile">Check your profile</a>
+        <a href="{{ path('fos_user_profile_show')}}" title="Profile">{{'check'|trans}} {{'profile|trans}}</a>
     </div>
 {% endblock body %}

@@ -2,8 +2,8 @@
 
 {% block body %}
 <div class="container">
-    <a href="{{ url('answers') }}" title="answers">&lt;- Back to answers list</a>
-    <h2>Delete Answer: {{answer.content}}</h2>
+    <a href="{{ url('answers') }}" title="answers">&lt;- {{'list.back'|trans}}</a>
+    <h2>{{'delete'|trans}} {{'answer'|trans}}: {{answer.content}}</h2>
     <div>{{ form_errors(form) }}</div>
     {{ form(form, {'method': 'POST'}) }}
 </div>

@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,8 +30,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserInterface;
-
-
 
 /**
  * Class QuestionsController.
@@ -69,6 +68,13 @@ class QuestionsController
      * @var RouterInterface $router
      */
     private $router;
+    
+    /**
+     * Security context
+     *
+     * @var SecurityContext
+     */
+    protected $securityContext;
 
     /**
      * Questions model object.
@@ -97,7 +103,14 @@ class QuestionsController
      * @var ObjectRepository $answersModel
      */
     private $answersModel;
-    
+
+    /**
+     * Users model object.
+     *
+     * @var ObjectRepository $usersModel
+     */
+    private $usersModel;
+
     /**
      * Form factory.
      *
@@ -120,10 +133,12 @@ class QuestionsController
      * @param EngineInterface $templating Templating engine
      * @param Session $session Session
      * @param RouterInterface $router
+     * @param SecurityContext  $securityContext SecurityContext
      * @param ObjectRepository $questionsModel Model object
      * @param ObjectRepository $tagsModel Model object
      * @param ObjectRepository $categoriesModel Model object
      * @param ObjectRepository $answersModel Model object
+     * @param ObjectRepository $usersModel Model object
      * @param FormFactory $q_formFactory Form factory
      * @param FormFactory $a_formFactory Form factory
      */
@@ -132,10 +147,12 @@ class QuestionsController
         EngineInterface $templating,
         Session $session,
         RouterInterface $router,
+        SecurityContext $securityContext,
         ObjectRepository $questionsModel,
         ObjectRepository $tagsModel,
         ObjectRepository $categoriesModel,
         ObjectRepository $answersModel,
+        ObjectRepository $usersModel,
         FormFactory $q_formFactory,
         FormFactory $a_formFactory
     ) {
@@ -143,10 +160,12 @@ class QuestionsController
         $this->templating = $templating;
         $this->session = $session;
         $this->router = $router;
+        $this->securityContext = $securityContext;
         $this->questionsModel = $questionsModel;
         $this->tagsModel = $tagsModel;
         $this->categoriesModel = $categoriesModel;
         $this->answersModel = $answersModel;
+        $this->usersModel = $usersModel;
         $this->q_formFactory = $q_formFactory;
         $this->a_formFactory = $a_formFactory;
         
@@ -179,14 +198,23 @@ class QuestionsController
      * @throws NotFoundHttpException
      * @return Response A Response instance
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $questions = $this->questionsModel->findAll();
-        // if (!$questions) {
-            // throw new NotFoundHttpException(
-                // $this->translator->trans('questions.messages.questions_not_found')
-            // );
-        // }
+        if (!$questions) {
+            throw new NotFoundHttpException(
+                $this->translator->trans('messages.questions_not_found')
+            );
+        }
+        // $paginator  = $this->get('knp_paginator');
+        // $pagination = $paginator->paginate(
+            // $questions, /* query NOT result */
+            // $request->query->getInt('page', 1)/*page number*/,
+            // 10/*limit per page*/
+        // );
+
+        // parameters to template
+        // return $this->render('AppBundle:Questions:index2.html.twig', array('pagination' => $pagination));
         return $this->templating->renderResponse(
             'AppBundle:Questions:index.html.twig',
             array('data' => $questions)
@@ -212,12 +240,39 @@ class QuestionsController
 
         if (!$question) {
             throw new NotFoundHttpException(
-                $this->translator->trans('questions.messages.question_not_found')
+                $this->translator->trans('messages.not_found')
             );
         }
         return $this->templating->renderResponse(
             'AppBundle:Questions:view.html.twig',
             array('data' => $question, 'tags' => $tags, 'category' => $category, 'answers' => $answers)
+        );
+    }
+    
+    /**
+     * Users questions action.
+     *
+     * @Route("/myquestions", name="user-questions")
+     * @Route("/myquestions/")
+     *
+     * @throws NotFoundHttpException
+     * @return Response A Response instance
+     */
+    public function profileAction(Request $request)
+    {
+        $questions = $this->questionsModel->findAll();
+        $user = $this->securityContext->getToken()->getUser();
+        $id = $user->getId();
+        $myquestions = $this->questionsModel->findByUser($user);
+        if (!$questions) {
+            throw new NotFoundHttpException(
+                $this->translator->trans('messages.questions_not_found')
+            );
+        }
+
+        return $this->templating->renderResponse(
+            'AppBundle:Questions:profile.html.twig',
+            array('data' => $myquestions)
         );
     }
 
@@ -232,23 +287,24 @@ class QuestionsController
      */
     public function addAction(Request $request)
     {
-        // $userManager = $this->get('fos_user.user_manager');
-        // $user = $userManager->createUser();
-        // var_dump($user);die();
-        // $user = new User();
-        // $userID = $user->getUser()->getId();
-        // $this->get('fos_user.user_manager');
-        // $user = $this->get('security.token_storage')->getToken()->getUser();
-        // $userManager = $container->get('fos_user.user_manager');
-        // $user = $this->get('security.context')->getToken()->getUser();
-        $user = $this->questionsModel->getUser();
-        // $user = $this->questionsModel->get('security.context')->getToken()->getUser();
-        $userId = $user->getId();
-        var_dump($user);die();
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if(!$roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.user')
+            );
+            return new RedirectResponse(
+                $this->router->generate('login')
+            );
+        }
+
+        $user = $this->securityContext->getToken()->getUser();
+        $question = new Question();
+        $question->setUser($user);
         
         $questionForm = $this->q_formFactory->create(
             new questionType(),
-            null,
+            $question,
             array(
                 'validation_groups' => 'question-default',
                 'tag_model' => $this->tagsModel,
@@ -263,7 +319,7 @@ class QuestionsController
             $this->questionsModel->save($question);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('questions.messages.success.add')
+                $this->translator->trans('messages.success.add')
             );
             return new RedirectResponse(
                 $this->router->generate('questions')
@@ -289,10 +345,22 @@ class QuestionsController
      */
     public function editAction(Request $request, question $question = null)
     {
+        $user = $this->securityContext->getToken()->getUser();
+        $author = $question->getUser();
+        if($user != $author) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.yours')
+            );
+            return new RedirectResponse(
+                $this->router->generate('questions')
+            );
+        }
+        
         if (!$question) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('questions.messages.question_not_found')
+                $this->translator->trans('messages.not_found')
             );
             return new RedirectResponse(
                 $this->router->generate('questions-add')
@@ -316,7 +384,7 @@ class QuestionsController
             $this->questionsModel->save($question);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('questions.messages.success.edit')
+                $this->translator->trans('messages.success.edit')
             );
             return new RedirectResponse(
                 $this->router->generate('questions')
@@ -343,10 +411,22 @@ class QuestionsController
      */
     public function deleteAction(Request $request, question $question = null)
     {
+        $user = $this->securityContext->getToken()->getUser();
+        $author = $question->getUser();
+        if($user != $author) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.yours')
+            );
+            return new RedirectResponse(
+                $this->router->generate('questions')
+            );
+        }
+
         if (!$question) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('questions.messages.question_not_found')
+                $this->translator->trans('messages.not_found')
             );
             return new RedirectResponse(
                 $this->router->generate('questions')
@@ -370,7 +450,7 @@ class QuestionsController
             $this->questionsModel->delete($question);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('questions.messages.success.delete')
+                $this->translator->trans('messages.success.delete')
             );
             return new RedirectResponse(
                 $this->router->generate('questions')

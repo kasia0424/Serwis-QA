@@ -1,0 +1,49 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <button class="right"><a href="{{ url('questions') }}" title="questions">{{'questions.all'|trans}}</a></button>
+    <h1> {{ 'my'|trans}} {{'questions'|trans }}</h1>
+    <button class="add"><a href="{{ url('questions-add') }}" title="add">{{'add'|trans}}</a></button>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {% if data|length %}
+        <table>
+        <tr>
+            <th>{{'title'|trans}} </th>
+            <th>{{'content'|trans}} </th>
+            <th>{{ 'actions'|trans }}</th>
+        </tr>
+        {% for row in data %}
+                <tr class="colored">
+                    <td>
+                        <span class="date">{{ row.date|date("m/d/Y") }}</span><br/><br/>
+                        <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.title }} 
+                        </a>
+                        (<a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.answers|length }}
+                        </a>)
+                    </td>
+                    <td>{{ row.content }}</td>
+                    <td>
+                        <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">{{ 'check.answers'|trans }}  -></a><br/>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == row.user.id %}
+                            <button class="edit"><a href="{{ url('questions-edit', { 'id' : row.id }) }}" title="edit">edit</a></button><br/>
+                            <button><a href="{{ url('questions-delete', { 'id' : row.id }) }}" title="delete">delete</a></button>
+                        {% endif %}
+                    </td>
+                </tr>
+        {%  endfor %}
+        </table>
+    {% else %}
+        <div> {{ 'data.no'|trans}}!</div>
+    {% endif %}
+</div>
+{% endblock %}
+

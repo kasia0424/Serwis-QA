@@ -45,7 +45,7 @@ class AnswerType extends AbstractType
                 'content',
                 'textarea',
                 array(
-                    'label'      => 'Answer content',
+                    'label'      => 'Treść',
                     'required'   => true,
                     'max_length' => 128,
                 )
@@ -55,7 +55,7 @@ class AnswerType extends AbstractType
             'save',
             'submit',
             array(
-                'label' => 'Save'
+                'label' => 'Zapisz'
             )
         );
     }

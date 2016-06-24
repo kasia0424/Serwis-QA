@@ -1,0 +1,35 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        {% for type, messages in app.session.flashbag.all %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="fos_user_user_show bordered">
+            
+        </div>
+        <div class="bordered colored">
+            <h3>{{'questions'|trans}} {{'list'|trans}}</h3>
+            <p>
+                <span> Pytanie (2)</span>
+                <span>ostatnia odpowiedü</span>
+            </p>
+            <p>
+                <span> Pytanie (2)</span>
+                <span> ostatnia odpowiedü</span>
+            </p>
+        </div>
+        <div class="bordered colored">
+            <h3>Moje odpowiedzi</h3>
+            <p>
+                <span> Pytanie (2)</span>
+                <span> moja odpowiedü</span>
+            </p>
+        </div>
+    </div>
+{% endblock body %}

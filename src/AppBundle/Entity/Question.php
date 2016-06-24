@@ -90,7 +90,7 @@ class Question
      * Tags array
      *
      * @ORM\ManyToMany(
-     *      targetEntity="Tag", 
+     *      targetEntity="Tag",
      *      inversedBy="questions"
      * )
      * @ORM\JoinTable(name="qa_questions_tags")
@@ -106,6 +106,7 @@ class Question
      *      targetEntity="Category",
      *      inversedBy="questions"
      * )
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $category
      */
@@ -130,7 +131,7 @@ class Question
      *      targetEntity="User",
      *      inversedBy="questions"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $user
      */
@@ -384,7 +385,7 @@ class Question
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User 
+     * @return \AppBundle\Entity\User
      */
     public function getUser()
     {

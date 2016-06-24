@@ -12,4 +12,24 @@ use Doctrine\ORM\EntityRepository;
  */
 class Role extends EntityRepository
 {
+
+    public function takeRole($user)
+    {
+        $query = $this->createQueryBuilder('r')
+
+            ->select(
+                'r.id',
+                'r.role',
+                'u.id',
+                'u.username'
+            )
+            // ->from('AppBundle:Post', 'p')
+            ->innerJoin('r.users', 'u')
+            ->where('u.id = :id')
+            ->setParameter('id', $user)
+            ->getQuery();
+
+        return $query->getResult();
+
+    }
 }

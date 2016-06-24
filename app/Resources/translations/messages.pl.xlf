@@ -10,12 +10,45 @@
                 <source>log.out</source>
                 <target>Wyloguj</target>
             </trans-unit>
+            <trans-unit id="111">
+                <source>login</source>
+                <target>Zaloguj</target>
+            </trans-unit>
             <trans-unit id="12">
                 <source>register</source>
                 <target>Zarejestruj</target>
             </trans-unit>
-            
-            <!-- szczegóły -->
+            <trans-unit id="13">
+                <source>author</source>
+                <target>Autor</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>wrote</source>
+                <target>napisał</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>registration.success</source>
+                <target>Rejestracja się powiodła. Spróbuj się teraz zalogować</target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>my</source>
+                <target>Moje</target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>password.change</source>
+                <target>Zmień hasło</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>profile</source>
+                <target>twój profil</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>users.bier</source>
+                <target>użytkowników</target>
+            </trans-unit>
+        
+        
+            <!-- szczegóły, lista -->
             <trans-unit id="2">
                 <source>details</source>
                 <target> - szczegóły</target>
@@ -32,11 +65,31 @@
                 <source>list</source>
                 <target>Lista</target>
             </trans-unit>
+            <trans-unit id="24">
+                <source>more</source>
+                <target>Więcej</target>
+            </trans-unit>
+            <trans-unit id="25">
+                <source>actions</source>
+                <target>Akcje</target>
+            </trans-unit>
+            <trans-unit id="26">
+                <source>title</source>
+                <target>Tytuł</target>
+            </trans-unit>
+            <trans-unit id="27">
+                <source>content</source>
+                <target>Treść</target>
+            </trans-unit>
             
             <!-- formularze -->
             <trans-unit id="3">
                 <source>name</source>
                 <target>Nazwa</target>
+            </trans-unit>
+            <trans-unit id="31">
+                <source>date</source>
+                <target>Data</target>
             </trans-unit>
             
             <!-- buttony -->
@@ -56,6 +109,18 @@
                 <source>delete</source>
                 <target>Usuń</target>
             </trans-unit>
+            <trans-unit id="46">
+                <source>save</source>
+                <target>Zapisz</target>
+            </trans-unit>
+            <trans-unit id="47">
+                <source>check</source>
+                <target>Sprawdź</target>
+            </trans-unit>
+            <trans-unit id="48">
+                <source>back</source>
+                <target>Wróć</target>
+            </trans-unit>
 
             <!-- kategorie -->
             <trans-unit id="5">
@@ -74,17 +139,55 @@
                 <source>category</source>
                 <target>Kategoria</target>
             </trans-unit>
+            <trans-unit id="54">
+                <source>no.questions</source>
+                <target>Brak pytań w kategorii.</target>
+            </trans-unit>
 
             <!-- pytania -->
             <trans-unit id="6">
                 <source>questions</source>
                 <target>Pytania</target>
             </trans-unit>
+            <trans-unit id="61">
+                <source>questions.bier</source>
+                <target>pytań</target>
+            </trans-unit>
+            <trans-unit id="611">
+                <source>question</source>
+                <target>pytanie</target>
+            </trans-unit>
+            <trans-unit id="6112">
+                <source>question.bier</source>
+                <target>pytania</target>
+            </trans-unit>
+            <trans-unit id="62">
+                <source>check.answers</source>
+                <target>Zobacz odpowiedzi</target>
+            </trans-unit>
+            <trans-unit id="63">
+                <source>answers.no</source>
+                <target>Nie ma jeszcze odpowiedzi</target>
+            </trans-unit>
+            <trans-unit id="64">
+                <source>q.details</source>
+                <target>Szczegóły pytania</target>
+            </trans-unit>
+            <trans-unit id="65">
+                <source>questions.all</source>
+                <target>Wszystkie pytania</target>
+            </trans-unit>
+            
+            
 
             <!-- odpowiedzi -->
             <trans-unit id="7">
                 <source>answers</source>
                 <target>Odpowiedzi</target>
+            </trans-unit>
+            <trans-unit id="71">
+                <source>answer</source>
+                <target>Odpowiedź</target>
             </trans-unit>
 
             <!-- tagi -->
@@ -116,7 +219,44 @@
                 <source>tags.ldist.title</source>
                 <target>Lista tagów</target>
             </trans-unit>
+            <trans-unit id="86">
+                <source>tagged</source>
+                <target>Otagowane</target>
+            </trans-unit>
             
+            <!-- flashbagi -->
+            <trans-unit id="9">
+                <source>messages.success.add</source>
+                <target>Dodawanie się powiodło</target>
+            </trans-unit>
+            <trans-unit id="91">
+                <source>messages.success.edit</source>
+                <target>Zmiany zostały zapisane</target>
+            </trans-unit>
+            <trans-unit id="92">
+                <source>messages.success.delete</source>
+                <target>Pozycja została usunięta</target>
+            </trans-unit>
+            <trans-unit id="93">
+                <source>messages.not_found</source>
+                <target>Nie ma takiego rekordu</target>
+            </trans-unit>
+            <trans-unit id="94">
+                <source>profile.flash.updated</source>
+                <target>Profil został zmieniony</target>
+            </trans-unit>
+            <trans-unit id="95">
+                <source>not.yours</source>
+                <target>Co nie twoje, to nie ruszaj!</target>
+            </trans-unit>
+            <trans-unit id="96">
+                <source>not.admin</source>
+                <target>Poproś o to admina. Ty nie masz wystarczających uprawień.</target>
+            </trans-unit>
+            <trans-unit id="97">
+                <source>not.user</source>
+                <target>Zaloguj się najpierw!</target>
+            </trans-unit>
             
         </body>
     </file>

@@ -1,0 +1,56 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+<div class="container list">
+    <h1>{{'list'|trans }} {{ 'users.bier'|trans}}</h1>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {% if data|length %}
+        <table>
+        <tr>
+            <th>{{'username'|trans}} </th>
+            <th>{{'email'|trans}}</th>
+            <th>{{'bisthdate'|trans}}</th>
+            <th colspan="3">{{'actions'|trans}}</th>
+        </tr>
+        {% for row in data %}
+                <tr class="colored">
+                    <td>
+                        <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.username }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.email }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ row.birthdate }}
+                    </td>
+                    <td>
+                        <a href="{{ path('fos_user_profile_edit') }}">
+                            {{'edit'|trans}} {{'profile'|trans}}
+                        </a>
+                    </td>
+                    <td>
+                    <a href="{{ url('user-edit', { 'id' : row.id }) }}" title="edit">
+                        change role</a>
+                    </td>
+                    <td>
+                        delete
+                    </td>
+                </tr>
+        {%  endfor %}
+        </table>
+    {% else %}
+        <div> {{'data.no'|trans}}</div>
+    {% endif %}
+</div>
+{% endblock %}
+

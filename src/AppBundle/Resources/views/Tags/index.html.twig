@@ -3,7 +3,9 @@
 {% block body %}
 <div class="container list">
     <h1> {{ 'tags.list.title'|trans }}</h1>
-    <button class="add"><a href="{{ url('tags-add') }}" title="add">{{ 'add'|trans }}</a></button>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <button class="add"><a href="{{ url('tags-add') }}" title="add">{{ 'add'|trans }}</a></button>
+    {% endif %}
     <div class="clear"></div>
     
     {% for type, messages in app.session.flashbag.all %}

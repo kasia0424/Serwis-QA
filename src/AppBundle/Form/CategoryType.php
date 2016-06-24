@@ -40,7 +40,7 @@ class CategoryType extends AbstractType
                 'name',
                 'text',
                 array(
-                    'label'      => 'Category name',
+                    'label'      => 'Nazwa',
                     'required'   => true,
                     'max_length' => 128,
                 )
@@ -49,7 +49,7 @@ class CategoryType extends AbstractType
                 'description',
                 'text',
                 array(
-                    'label'      => 'Category description',
+                    'label'      => 'Opis',
                     'required'   => false,
                     'max_length' => 128,
                 )
@@ -59,7 +59,7 @@ class CategoryType extends AbstractType
             'save',
             'submit',
             array(
-                'label' => 'Save'
+                'label' => 'Zapisz'
             )
         );
     }

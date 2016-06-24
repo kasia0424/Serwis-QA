@@ -1,0 +1,18 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}{{ 'Rejestracja' }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ 'Rejestracja' }}</h1>
+
+    <div>
+        {{ form_start(form) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.plainPassword.first) }}
+        {{ form_row(form.plainPassword.second) }}
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

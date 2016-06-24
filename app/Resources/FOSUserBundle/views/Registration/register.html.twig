@@ -2,6 +2,13 @@
 
 {% block body %}
     <div class="container">
+        {% for type, messages in app.session.flashbag.all %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endfor %}
         {% include "FOSUserBundle:Registration:register_content.html.twig" %}
     </div>
 {% endblock body %}

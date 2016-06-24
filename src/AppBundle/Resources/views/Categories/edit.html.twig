@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container">
     <a href="{{ url('categories') }}" title="categories">&lt;- {{ 'list.back'|trans }}</a>
-    <h2>Edit Category</h2>
+    <h2>{{'edit'|trans}} {{'category'|trans}}</h2>
     <div>{{ form_errors(form) }}</div>
     {{ form(form, {'method': 'POST'}) }}
 </div>

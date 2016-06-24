@@ -70,8 +70,13 @@ abstract class User implements UserInterface, GroupableInterface
             return $this;
         }
 
-        if (!in_array($role, $this->role, true)) {
-            $this->role[] = $role;
+        // if (!in_array($role, $this->role, true)) {
+            // $this->role[] = $role;
+        // }
+        if (is_array($this->roles)) {
+            if (!in_array($role, $this->roles, true)) {
+                $this->roles[] = $role;
+            }
         }
 
         return $this;
@@ -252,6 +257,4 @@ abstract class User implements UserInterface, GroupableInterface
     {
         return (string) $this->getUsername();
     }
-
-
 }

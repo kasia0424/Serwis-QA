@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class AnswersController.
@@ -63,6 +65,13 @@ class AnswersController
     private $router;
 
     /**
+     * Security context
+     *
+     * @var SecurityContext
+     */
+    protected $securityContext;
+
+    /**
      * Questions model object.
      *
      * @var ObjectRepository $questionsModel
@@ -70,11 +79,18 @@ class AnswersController
     private $questionsModel;
     
     /**
-     * nswers model object.
+     * Answers model object.
      *
      * @var ObjectRepository $answersModel
      */
     private $answersModel;
+    
+    /**
+     * Users model object.
+     *
+     * @var ObjectRepository $usersModel
+     */
+    private $usersModel;
 
     /**
      * Form factory.
@@ -90,8 +106,10 @@ class AnswersController
      * @param EngineInterface $templating Templating engine
      * @param Session $session Session
      * @param RouterInterface $router
+     * @param SecurityContext  $securityContext SecurityContext
      * @param ObjectRepository $questionsModel Model object
      * @param ObjectRepository $answersModel Model object
+     * @param ObjectRepository $usersModel Model object
      * @param FormFactory $formFactory Form factory
      */
     public function __construct(
@@ -99,16 +117,20 @@ class AnswersController
         EngineInterface $templating,
         Session $session,
         RouterInterface $router,
+        SecurityContext $securityContext,
         ObjectRepository $questionsModel,
         ObjectRepository $answersModel,
+        ObjectRepository $usersModel,
         FormFactory $formFactory
     ) {
         $this->translator = $translator;
         $this->templating = $templating;
         $this->session = $session;
         $this->router = $router;
+        $this->securityContext = $securityContext;
         $this->questionsModel = $questionsModel;
         $this->answersModel = $answersModel;
+        $this->usersModel = $usersModel;
         $this->formFactory = $formFactory;
     }
 
@@ -126,7 +148,7 @@ class AnswersController
         $answers = $this->answersModel->findAll();
         // if (!$answers) {
             // throw new NotFoundHttpException(
-                // $this->translator->trans('answers.messages.answers_not_found')
+                // $this->translator->trans('messages.not_found')
             // );
         // }
         return $this->templating->renderResponse(
@@ -151,12 +173,39 @@ class AnswersController
         $question = $answer->getQuestion();
         if (!$answer) {
             throw new NotFoundHttpException(
-                $this->translator->trans('answers.messages.answer_not_found')
+                $this->translator->trans('messages.not_found')
             );
         }
         return $this->templating->renderResponse(
             'AppBundle:Answers:view.html.twig',
             array('data' => $answer, 'question' => $question)
+        );
+    }
+
+    /**
+     * Users answers action.
+     *
+     * @Route("/myanswers", name="user-answers")
+     * @Route("/myanswers/")
+     *
+     * @throws NotFoundHttpException
+     * @return Response A Response instance
+     */
+    public function profileAction(Request $request)
+    {
+        $answers = $this->answersModel->findAll();
+        $user = $this->securityContext->getToken()->getUser();
+        $id = $user->getId();
+        $myanswers = $this->answersModel->findByUser($user);
+        // if (!$myanswers) {
+            // throw new NotFoundHttpException(
+                // $this->translator->trans('messages.questions_not_found')
+            // );
+        // }
+
+        return $this->templating->renderResponse(
+            'AppBundle:Answers:profile.html.twig',
+            array('data' => $myanswers)
         );
     }
 
@@ -174,18 +223,32 @@ class AnswersController
     public function addAction(Request $request, Question $question = null)
     {
         $id = (integer)$request->get('id', null);
-        // if (!$question) {
-             // $this->session->getFlashBag()->set(
-                 // 'warning',
-                 // $this->translator->trans('questions.messages.question_not_found')
-             // );
-             // return new RedirectResponse(
-                 // $this->router->generate('questions-add')
-             // );
-         // }
-// var_dump($question);die();
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if(!$roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.user')
+            );
+            return new RedirectResponse(
+                $this->router->generate('login')
+            );
+        }
+        if (!$question) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('messages.not_found')
+            );
+            return new RedirectResponse(
+                $this->router->generate('questions-add')
+            );
+        }
+
+        $user = $this->securityContext->getToken()->getUser();
+        // $user = $this->usersModel->findById('1');
         $answer = new Answer();
         $answer->setQuestion($question);
+        // $answer->setUser($user[0]);
+        $answer->setUser($user);
     
         $answerForm = $this->formFactory->create(
             new AnswerType(),
@@ -202,11 +265,14 @@ class AnswersController
             $this->answersModel->save($answer);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('answers.messages.success.add')
+                $this->translator->trans('messages.success.add')
             );
             return new RedirectResponse(
-               $this->router->generate('questions-view', array('id' => $id))
-           );
+                $this->router->generate(
+                    'questions-view',
+                    array('id' => $id)
+                )
+            );
         }
 
         return $this->templating->renderResponse(
@@ -226,47 +292,49 @@ class AnswersController
      * @param Request $request
      * @return Response A Response instance
      */
-    public function editAction(Request $request, Answer $answer = null)
-    {
-        if (!$answer) {
-            $this->session->getFlashBag()->set(
-                'warning',
-                $this->translator->trans('answers.messages.answer_not_found')
-            );
-            return new RedirectResponse(
-                $this->router->generate('answers-add')
-            );
-        }
+    // public function editAction(Request $request, Answer $answer = null)
+    // {
+        // $user = $this->securityContext->getToken()->getUser();
+        
+        // if (!$answer) {
+            // $this->session->getFlashBag()->set(
+                // 'warning',
+                // $this->translator->trans('messages.not_found')
+            // );
+            // return new RedirectResponse(
+                // $this->router->generate('answers-add')
+            // );
+        // }
 
-        $answerForm = $this->formFactory->create(
-            new AnswerType(),
-            $answer,
-            array(
-                'validation_groups' => 'answer-default',
-                'question_model' => $this->questionsModel
-            )
-        );
+        // $answerForm = $this->formFactory->create(
+            // new AnswerType(),
+            // $answer,
+            // array(
+                // 'validation_groups' => 'answer-default',
+                // 'question_model' => $this->questionsModel
+            // )
+        // );
 
-        $answerForm->handleRequest($request);
+        // $answerForm->handleRequest($request);
 
-        if ($answerForm->isValid()) {
-            $answer = $answerForm->getData();
-            $this->answersModel->save($answer);
-            $this->session->getFlashBag()->set(
-                'success',
-                $this->translator->trans('answers.messages.success.edit')
-            );
-            return new RedirectResponse(
-                $this->router->generate('answers')
-            );
-        }
+        // if ($answerForm->isValid()) {
+            // $answer = $answerForm->getData();
+            // $this->answersModel->save($answer);
+            // $this->session->getFlashBag()->set(
+                // 'success',
+                // $this->translator->trans('messages.success.edit')
+            // );
+            // return new RedirectResponse(
+                // $this->router->generate('answers')
+            // );
+        // }
 
-        return $this->templating->renderResponse(
-            'AppBundle:Answers:edit.html.twig',
-            array('form' => $answerForm->createView())
-        );
+        // return $this->templating->renderResponse(
+            // 'AppBundle:Answers:edit.html.twig',
+            // array('form' => $answerForm->createView())
+        // );
 
-    }
+    // }
 
     /**
      * Delete action.
@@ -281,10 +349,23 @@ class AnswersController
      */
     public function deleteAction(Request $request, Answer $answer = null)
     {
+        $user = $this->securityContext->getToken()->getUser();
+        $author = $answer->getUser();
+        
         if (!$answer) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('answers.messages.answer_not_found')
+                $this->translator->trans('messages.not_found')
+            );
+            return new RedirectResponse(
+                $this->router->generate('answers')
+            );
+        }
+
+        if($user != $author) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.yours')
             );
             return new RedirectResponse(
                 $this->router->generate('answers')
@@ -295,8 +376,7 @@ class AnswersController
             new AnswerType(),
             $answer,
             array(
-                'validation_groups' => 'answer-delete',
-                'question_model' => $this->questionsModel
+                'validation_groups' => 'answer-delete'
             )
         );
 
@@ -307,7 +387,7 @@ class AnswersController
             $this->answersModel->delete($answer);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('answers.messages.success.delete')
+                $this->translator->trans('messages.success.delete')
             );
             return new RedirectResponse(
                 $this->router->generate('answers')

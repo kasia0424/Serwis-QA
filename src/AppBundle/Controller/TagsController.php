@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class TagsController.
@@ -62,6 +64,13 @@ class TagsController
     private $router;
 
     /**
+     * Security context
+     *
+     * @var SecurityContext
+     */
+    protected $securityContext;
+
+    /**
      * Model object.
      *
      * @var ObjectRepository $tagsModel
@@ -89,6 +98,7 @@ class TagsController
      * @param EngineInterface $templating Templating engine
      * @param Session $session Session
      * @param RouterInterface $router
+     * @param SecurityContext  $securityContext SecurityContext
      * @param ObjectRepository $tagsModel Model object
      * @param ObjectRepository $questionsModel Model object
      * @param FormFactory $formFactory Form factory
@@ -98,6 +108,7 @@ class TagsController
         EngineInterface $templating,
         Session $session,
         RouterInterface $router,
+        SecurityContext $securityContext,
         ObjectRepository $tagsModel,
         ObjectRepository $questionsModel,
         FormFactory $formFactory
@@ -106,6 +117,7 @@ class TagsController
         $this->templating = $templating;
         $this->session = $session;
         $this->router = $router;
+        $this->securityContext = $securityContext;
         $this->tagsModel = $tagsModel;
         $this->questionsModel = $questionsModel;
         $this->formFactory = $formFactory;
@@ -125,7 +137,7 @@ class TagsController
         $tags = $this->tagsModel->findAll();
         if (!$tags) {
             throw new NotFoundHttpException(
-                $this->translator->trans('tags.messages.tags_not_found')
+                $this->translator->trans('messages.tags_not_found')
             );
         }
         return $this->templating->renderResponse(
@@ -149,7 +161,7 @@ class TagsController
     {
         if (!$tag) {
             throw new NotFoundHttpException(
-                $this->translator->trans('tags.messages.tag_not_found')
+                $this->translator->trans('messages.not_found')
             );
         }
         return $this->templating->renderResponse(
@@ -169,6 +181,17 @@ class TagsController
      */
     public function addAction(Request $request)
     {
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if($roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.admin')
+            );
+            return new RedirectResponse(
+                $this->router->generate('tags')
+            );
+        }
+
         $tagForm = $this->formFactory->create(
             new TagType(),
             null,
@@ -184,7 +207,7 @@ class TagsController
             $this->tagsModel->save($tag);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('tags.messages.success.add')
+                $this->translator->trans('messages.success.add')
             );
             return new RedirectResponse(
                 $this->router->generate('tags')
@@ -210,10 +233,21 @@ class TagsController
      */
     public function editAction(Request $request, Tag $tag = null)
     {
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if($roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.admin')
+            );
+            return new RedirectResponse(
+                $this->router->generate('tags')
+            );
+        }
+
         if (!$tag) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('tags.messages.tag_not_found')
+                $this->translator->trans('messages.not_found')
             );
             return new RedirectResponse(
                 $this->router->generate('tags-add')
@@ -235,7 +269,7 @@ class TagsController
             $this->tagsModel->save($tag);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('tags.messages.success.edit')
+                $this->translator->trans('messages.success.edit')
             );
             return new RedirectResponse(
                 $this->router->generate('tags')
@@ -262,10 +296,21 @@ class TagsController
      */
     public function deleteAction(Request $request, Tag $tag = null)
     {
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if($roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.admin')
+            );
+            return new RedirectResponse(
+                $this->router->generate('tags')
+            );
+        }
+
         if (!$tag) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('tags.messages.tag_not_found')
+                $this->translator->trans('messages.not_found')
             );
             return new RedirectResponse(
                 $this->router->generate('tags')
@@ -287,7 +332,7 @@ class TagsController
             $this->tagsModel->delete($tag);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('tags.messages.success.delete')
+                $this->translator->trans('messages.success.delete')
             );
             return new RedirectResponse(
                 $this->router->generate('tags')

@@ -3,7 +3,9 @@
 {% block body %}
 <div class="container list">
     <h1> {{ 'list'|trans }} {{ 'categories.bier'|trans }}</h1>
-    <button class="add"><a href="{{ url('categories-add') }}" title="add">{{ 'add'|trans }}</a></button>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <button class="add"><a href="{{ url('categories-add') }}" title="add">{{ 'add'|trans }}</a></button>
+    {% endif %}
     <div class="clear"></div>
     {% for type, messages in app.session.flashbag.all %}
         <div class="alert alert-{{ type }}" role="alert">
@@ -38,9 +40,9 @@
                             {% endif %}
                         {% endfor %}
                     </ul>
-                    <a href="{{ url('categories-view', { 'id' : row.id }) }}" title="view">Check more questions -></a>
+                    <a href="{{ url('categories-view', { 'id' : row.id }) }}" title="view">{{ 'more'|trans }} {{ 'questions.bier'|trans }} -></a>
                 {% else %}
-                    <p class="bordered"> No questions in this category yet.</p>
+                    <p class="bordered"> {{ 'no.questions'|trans}}</p>
                 {% endif %}
             </div>
         {% endfor %}

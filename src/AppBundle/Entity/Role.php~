@@ -1,31 +1,31 @@
 <?php
+
 /**
  * Role entity.
  *
- * @copyright (c) 2016 Wanda Sipel
- * @link http://wierzba.wzks.uj.edu.pl/~12_sipel/symfony_projekt/app_dev.php/roles
+ * @copyright (c) 2016 Agnieszka Gorgolewska
+ * @link http://wierzba.wzks.uj.edu.pl/~12_gorgolewska
  */
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
- * Class Role.
- *
- * @package Model
- * @author WS
+ * Class Role
  *
  * @ORM\Table(name="qa_roles")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Role")
- * @UniqueEntity(fields="name", groups={"role-default"})
+ *
  */
+
 class Role
 {
     /**
-     * Id
+     * Id.
      *
      * @ORM\Id
      * @ORM\Column(
@@ -41,33 +41,48 @@ class Role
      */
     private $id;
 
+
     /**
-     * Name
-     *
-     * @ORM\Column(
-     *     name="name",
-     *     type="string",
-     *     length=128,
-     *     nullable=false
-     * )
-     * @Assert\NotBlank(groups={"role-default"})
-     * @Assert\Length(min=3, max=128, groups={"role-default"})
-     *
-     * @var string $name
+     * @var
+     * @ORM\Column(name="name", type="string", length=20)
+     * @Assert\NotBlank(message="validations.name.not_blank")
      */
     private $name;
 
-    // /**
-     // * Users array
-     // *
-     // * @ORM\ManyToMany(targetEntity="User", mappedBy="role")
-     // *
-     // * @var \Doctrine\Common\Collections\ArrayCollection $users
-     // */
-    // protected $users;
-    
     /**
-     * Constructor.
+     * @var
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="roles")
+     */
+    // private $users;
+
+
+
+
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     * @return Role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+    /**
+     * Constructor
      */
     public function __construct()
     {
@@ -75,17 +90,39 @@ class Role
     }
 
     /**
-     * Set id
+     * Add users
      *
-     * @param string $id
+     * @param \AppBundle\Entity\User $users
      * @return Role
      */
-    public function setId($id)
+    public function addUser(\AppBundle\Entity\User $users)
     {
-        $this->id = $id;
+        $this->users[] = $users;
 
         return $this;
     }
+
+    /**
+     * Remove users
+     *
+     * @param \AppBundle\Entity\User $users
+     */
+    public function removeUser(\AppBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+
 
     /**
      * Get id
@@ -118,75 +155,5 @@ class Role
     public function getName()
     {
         return $this->name;
-    }
-    
-    /**
-     * Add users.
-     *
-     * @param \AppBundle\Entity\User $users
-     */
-    public function addUser(\AppBundle\Entity\User $users)
-    {
-        $this->users[] = $users;
-    }
-
-    /**
-     * Remove users
-     *
-     * @param \AppBundle\Entity\User $users
-     */
-    public function removeUser(\AppBundle\Entity\User $user)
-    {
-        $this->users->removeElement($users);
-    }
-
-    /**
-     * Get users.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-    
-    /**
-     * Get all records.
-     *
-     * @access public
-     * @return array Roles array
-     */
-    public function findAll()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * Get single record by its id.
-     *
-     * @access public
-     * @param integer $id Single record index
-     * @return array Result
-     */
-    public function find($id)
-    {
-        if (isset($this->roles[$id]) && count($this->roles)) {
-            return $this->roles[$id];
-        } else {
-            return array();
-        }
-    }
-    
-    /**
-     * Delete single record by its id.
-     *
-     * @access public
-     * @param integer $role Single record index
-     * @return array Result
-     */
-    public function delete($role)
-    {
-        return $this->remove($role);
-        //$this->sections->removeElement($sections);
     }
 }

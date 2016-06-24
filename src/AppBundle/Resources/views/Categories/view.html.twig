@@ -3,6 +3,13 @@
 {% block body %}
 <div class="container">
     <a href="{{ url('categories') }}" title="categories">&lt;- {{ 'list.back'|trans }}</a>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
     {% if data|length %}
         <h1> {{ data.name }}{{ 'details'|trans }} </h1>
         {% if data.description|length %}
@@ -14,23 +21,22 @@
         {% if data.questions|length %}
             <table>
             <tr>
-                <th>Question Title </th>
-                <th>Question Content </th>
-                
-                <th>Actions</th>
+                <th>{{'title'|trans}} {{'question.bier'|trans}} </th>
+                <th>{{'content'|trans}} </th>
+                <th>{{ 'actions'|trans }}</th>
             </tr>
             {% for row in data.questions %}
                     <tr class="colored">
                         <td>
                             <span class="date">{{ row.date|date("m/d/Y") }}</span><br/><br/>
-                            {{ row.title }} 
-                            (<a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
-                                {{ row.answers|length }}
-                            </a>)
+                            <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">
+                                {{ row.title }} 
+                            ({{ row.answers|length }})
+                            </a>
                         </td>
                         <td>{{ row.content }}</td>
                         <td>
-                            <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">Check answers  -></a><br/>
+                            <a href="{{ url('questions-view', { 'id' : row.id }) }}" title="view">{{ 'check.answers'|trans }}   -></a><br/>
                             {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == row.user.id %}
                                 <button class="edit"><a href="{{ url('questions-edit', { 'id' : row.id }) }}" title="edit">edit</a></button><br/>
                                 <button><a href="{{ url('questions-delete', { 'id' : row.id }) }}" title="delete">delete</a></button>

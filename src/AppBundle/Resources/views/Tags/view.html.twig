@@ -3,12 +3,19 @@
 {% block body %}
 <div class="container">
     <a href="{{ url('tags') }}" title="tags">&lt; {{ 'list.back'|trans }}</a>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
     {% if data|length %}
         <h1> {{ data.name }}{{ 'details'|trans }}</h1>
         <table>
             <tr>
                 <th>{{ 'name'|trans }}</th>
-                <th>Tagged Questions</th>
+                <th>{{'tagged'|trans}} {{'questions'|trans}}</th>
             </tr>
             <tr>
                 <td>{{ data.name }}</td>

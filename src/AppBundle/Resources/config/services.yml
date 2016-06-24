@@ -1,4 +1,82 @@
 services:
+    app.user_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\User
+
+    # app.role_repository:
+        # class: Doctrine\ORM\EntityRepository
+        # factory_service: doctrine.orm.default_entity_manager
+        # factory_method: getRepository
+        # arguments:
+             # - AppBundle\Entity\Role
+
+    # app.users_controller:
+          # class: AppBundle\Controller\UsersController
+          # arguments:
+              # - @translator
+              # - @templating
+              # - @session
+              # - @router
+              # - @doctrine.orm.entity_manager
+              # - @app.user_repository
+              # - @form.factory
+              # - @security.context
+              # - @security.encoder_factory
+
+    # app.security_controller:
+        # class: AppBundle\Controller\SecurityController
+        # arguments:
+            # - @templating
+
+    app.registration_controller:
+       class: AppBundle\Controller\RegistrationController
+       arguments:
+           # - @app.role_repository
+           - @translator
+           - @templating
+           - @session
+          # - @app.word_repository
+           - @form.factory
+           # - @security.context
+         
+    # app.user_form:
+      # class: AppBundle\Form\UserType
+      # tags:
+         # - { name: form.type, alias: user }
+
+
+    # app.webservice_user_provider:
+        # class: AppBundle\Security\User\WebserviceUserProvider
+        # arguments:
+            # - @app.user_repository
+            # - @app.role_repository         
+             
+    # app.knp_paginator:
+        # class: Knp\Component\Pager\Paginator
+        # tags:
+            # - {name:knp_paginator.injectable, paginator:knp_paginator}
+        # arguments:
+            # - MyBundle\Repository\PaginatorAwareRepository
+             
+    app.us_form:
+        class: FOS\UserBundle\Form\Type\ProfileFormType
+        tags:
+            - { name: form.type, alias: us }
+    app.admin_controller:
+        class: AppBundle\Controller\AdminController
+        arguments:
+           - @translator
+           - @templating
+           - @session
+           - @router
+           - @security.context
+           - @app.user_repository
+           - @form.factory
+
+             
     app.tag_repository:
         class: Doctrine\ORM\EntityRepository
         factory_service: doctrine.orm.default_entity_manager
@@ -18,6 +96,7 @@ services:
             - @templating
             - @session
             - @router
+            - @security.context
             - @app.tag_repository
             - @app.question_repository
             - @form.factory
@@ -39,6 +118,7 @@ services:
            - @templating
            - @session
            - @router
+           - @security.context
            - @app.category_repository
            - @form.factory
 
@@ -63,12 +143,15 @@ services:
            - @templating
            - @session
            - @router
+           - @security.context
            - @app.question_repository
            - @app.tag_repository
            - @app.category_repository
            - @app.answer_repository
+           - @app.user_repository
            - @form.factory
            - @form.factory
+           # - @knp_paginator
 
     app.answer_repository:
         class: Doctrine\ORM\EntityRepository
@@ -87,6 +170,8 @@ services:
            - @templating
            - @session
            - @router
+           - @security.context
            - @app.question_repository
            - @app.answer_repository
+           - @app.user_repository
            - @form.factory

@@ -1,0 +1,3 @@
+services:
+    webservice_user_provider:
+        class: AppBundle\Security\User\WebserviceUserProvider

@@ -2,27 +2,37 @@
 
 {% block body %}
 <div class="container">
-    <a href="{{ url('questions') }}" title="questions">&lt;- Back to questions list</a>
-    <h1> Question Details</h1>
+    <a href="{{ url('questions') }}" title="questions">&lt;- {{'list.back'|trans}}</a>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <h1>{{'q.details'|trans}}</h1>
     {% if data|length %}
-        <h2 class="title"> Title: {{ data.title }} </h2> 
+        <h2 class="title"> {{'title'|trans}}: {{ data.title }}</h2> 
         {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == data.user.id %}
             <button class="edit"><a href="{{ url('questions-edit', { 'id' : data.id }) }}" title="edit">edit</a></button>  
             <button class="delete"><a href="{{ url('questions-delete', { 'id' : data.id }) }}" title="delete">delete</a></button>
         {% endif %}
         <div class="clear"></div>
         <span class="date">{{ data.date|date("d.m.Y") }}</span> 
-        <p class="category">Category: 
+        <p class="category">
+            {{'author'|trans}}: {{ data.user.username }} | 
+            {{'category'|trans}}: 
             {% if category|length %}
                 <a href="{{ url('categories-view', { 'id' : category.id }) }}" title="view">
-                    {{ category.name }}
+                    {{ category.name }}    
                 </a>
             {% else %}
                 -
             {% endif %}
         </p>
         <p>{{ data.content }} </p>
-        <ul class="tags"> Tags:
+        <ul class="tags"> {{'tags'|trans}}:
             {% if tags|length %}
                 {% for row in tags %}
                     <li>
@@ -34,17 +44,24 @@
             {% endif %}
         </ul>
         <div>
-            Odpowiedzi: <button><a href="{{ url('answers-add', {'id' : data.id }) }}" title="add">Add answer</a></button>
+            {{'answers'|trans}}: <button><a href="{{ url('answers-add', {'id' : data.id }) }}" title="add">{{'add'|trans}} {{'answer'|trans}}</a></button>
             {% if answers|length %}
                 {% for row in answers %}
-                    <section class="bordered colored">on {{ row.date|date("d.m.Y") }} <br/>wrote: {{ row.content }}</section>
+                    <section class="bordered colored">
+                        <p class="category">
+                            {{ row.user.username }} {{ row.date|date("d.m.Y") }} {{'wrote'|trans}}:
+                        </p>
+                        <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.content }}
+                        </a>
+                    </section>
                 {% endfor %}
             {% else %}
-                Nie ma jeszcze odpowiedzi.
+                <br/>{{'answers.no'|trans}}.
             {% endif %}
         </div>
     {% else %}
-        <div> No data, sorry!</div>
+        <div> {{'data.no'|trans}}!</div>
     {% endif %}
 </div>
 {% endblock %}

@@ -79,6 +79,7 @@ class Category
      *      targetEntity="Question",
      *      mappedBy="category"
      * )
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $questions
      */

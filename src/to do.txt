@@ -1,20 +1,17 @@
 Userzy
-- do pyt i odp
-- profil
 - konto admina
-
-Autoryzacja - done? do kontrollerów jeszcze
+- rejestr rola
 
 Bezpieczeñstwo - catche, walidacja
-404, 500
 style
-
-t³umaczenia
-
-zdjêcia??
 paginacja??
-WYSZUKIWARKA??
-Flashbagi do base.twig
 
-Odp
-- bez edit?
+Tagi
+- ograniczona iloœæ wyœwietlonych?
+
+Sprawdziæ:
+- usuwanie all
+- t³umaczenia
+- flashbagi
+- uruchomiæ prod + sprawdziæ 404 i 500
+- poprawiæ komentarze + dokumentacja

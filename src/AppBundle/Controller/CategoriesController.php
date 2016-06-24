@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class CategoriesController.
@@ -60,6 +62,13 @@ class CategoriesController
      * @var RouterInterface $router
      */
     private $router;
+    
+    /**
+     * Security context
+     *
+     * @var SecurityContext
+     */
+    protected $securityContext;
 
     /**
      * Model object.
@@ -82,6 +91,7 @@ class CategoriesController
      * @param EngineInterface $templating Templating engine
      * @param Session $session Session
      * @param RouterInterface $router
+     * @param SecurityContext  $securityContext SecurityContext
      * @param ObjectRepository $model Model object
      * @param FormFactory $formFactory Form factory
      */
@@ -90,6 +100,7 @@ class CategoriesController
         EngineInterface $templating,
         Session $session,
         RouterInterface $router,
+        SecurityContext $securityContext,
         ObjectRepository $model,
         FormFactory $formFactory
     ) {
@@ -97,6 +108,7 @@ class CategoriesController
         $this->templating = $templating;
         $this->session = $session;
         $this->router = $router;
+        $this->securityContext = $securityContext;
         $this->model = $model;
         $this->formFactory = $formFactory;
     }
@@ -115,7 +127,7 @@ class CategoriesController
         $categories = $this->model->findAll();
         if (!$categories) {
             throw new NotFoundHttpException(
-                $this->translator->trans('categories.messages.categories_not_found')
+                $this->translator->trans('messages.not_found')
             );
         }
         return $this->templating->renderResponse(
@@ -139,7 +151,7 @@ class CategoriesController
     {
         if (!$category) {
             throw new NotFoundHttpException(
-                $this->translator->trans('categories.messages.category_not_found')
+                $this->translator->trans('messages.not_found')
             );
         }
         return $this->templating->renderResponse(
@@ -159,6 +171,17 @@ class CategoriesController
      */
     public function addAction(Request $request)
     {
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if($roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.admin')
+            );
+            return new RedirectResponse(
+                $this->router->generate('categories')
+            );
+        }
+ 
         $categoryForm = $this->formFactory->create(
             new categoryType(),
             null,
@@ -174,7 +197,7 @@ class CategoriesController
             $this->model->save($category);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('categories.messages.success.add')
+                $this->translator->trans('messages.success.add')
             );
             return new RedirectResponse(
                 $this->router->generate('categories')
@@ -200,10 +223,22 @@ class CategoriesController
      */
     public function editAction(Request $request, category $category = null)
     {
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        // var_dump($roleflag);
+        if($roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.admin')
+            );
+            return new RedirectResponse(
+                $this->router->generate('categories')
+            );
+        }
+
         if (!$category) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('categories.messages.category_not_found')
+                $this->translator->trans('messages.not_found')
             );
             return new RedirectResponse(
                 $this->router->generate('categories-add')
@@ -225,7 +260,7 @@ class CategoriesController
             $this->model->save($category);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('categories.messages.success.edit')
+                $this->translator->trans('messages.success.edit')
             );
             return new RedirectResponse(
                 $this->router->generate('categories')
@@ -252,10 +287,21 @@ class CategoriesController
      */
     public function deleteAction(Request $request, category $category = null)
     {
+        $roleflag = $this->securityContext->isGranted('ROLE_USER');
+        if($roleflag) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('not.admin')
+            );
+            return new RedirectResponse(
+                $this->router->generate('categories')
+            );
+        }
+
         if (!$category) {
             $this->session->getFlashBag()->set(
                 'warning',
-                $this->translator->trans('categories.messages.category_not_found')
+                $this->translator->trans('messages.not_found')
             );
             return new RedirectResponse(
                 $this->router->generate('categories')
@@ -277,7 +323,7 @@ class CategoriesController
             $this->model->delete($category);
             $this->session->getFlashBag()->set(
                 'success',
-                $this->translator->trans('categories.messages.success.delete')
+                $this->translator->trans('messages.success.delete')
             );
             return new RedirectResponse(
                 $this->router->generate('categories')

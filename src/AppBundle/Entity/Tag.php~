@@ -61,6 +61,7 @@ class Tag
      * Questions array
      *
      * @ORM\ManyToMany(targetEntity="Question", mappedBy="tags")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $questions
      */

@@ -30,7 +30,7 @@ class User extends BaseUser
     /**
      * @ORM\Column(
      *      name="birthdate",
-     *      type="datetime", 
+     *      type="datetime",
      *      nullable=true
      * )
      */
@@ -64,13 +64,16 @@ class User extends BaseUser
     {
         parent::__construct();
         // your own logic
+        $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->answers = new \Doctrine\Common\Collections\ArrayCollection();
         $this->roles = array('ROLE_USER');
+        parent::__construct();
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -94,7 +97,7 @@ class User extends BaseUser
     /**
      * Get username
      *
-     * @return string 
+     * @return string
      */
     public function getUsername()
     {
@@ -117,7 +120,7 @@ class User extends BaseUser
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -141,7 +144,7 @@ class User extends BaseUser
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -164,7 +167,7 @@ class User extends BaseUser
     /**
      * Get birthdate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getBirthdate()
     {
@@ -250,7 +253,7 @@ class User extends BaseUser
     /**
      * Get questions
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getQuestions()
     {
@@ -283,7 +286,7 @@ class User extends BaseUser
     /**
      * Get answers
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAnswers()
     {

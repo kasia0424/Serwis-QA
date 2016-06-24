@@ -1,0 +1,42 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+<div class="container list">
+    <button class="right"><a href="{{ url('answers') }}" title="answers">{{'list'|trans}} {{'answers'|trans}}</a></button>
+    <h1>{{'my'|trans }} {{ 'answers'|trans}}</h1>
+    {% for type, messages in app.session.flashbag.all %}
+        <div class="alert alert-{{ type }}" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {% if data|length %}
+        <table>
+        <tr>
+            <th>{{'answer'|trans}} </th>
+            <th>{{'actions'|trans}}</th>
+        </tr>
+        {% for row in data %}
+                <tr class="colored">
+                    <td>
+                        <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">
+                            {{ row.content }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">{{'view'|trans}}</a><br/>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == row.user.id %} 
+                            <a href="{{ url('answers-edit', { 'id' : row.id }) }}" title="edit">{{'edit'|trans}}</a><br/>
+                            <a href="{{ url('answers-delete', { 'id' : row.id }) }}" title="delete">{{'delete'|trans}}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+        {%  endfor %}
+        </table>
+    {% else %}
+        <div> {{'data.no'|trans}}</div>
+    {% endif %}
+</div>
+{% endblock %}
+
