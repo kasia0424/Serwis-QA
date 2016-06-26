@@ -19,6 +19,13 @@ use AppBundle\Entity\Tag;
  */
 class LoadTagData implements FixtureInterface
 {
+    /**
+     * Load function
+     *
+     * @param ObjectManager $manager Object manager
+     *
+     * @return mixed
+     */
     public function load(ObjectManager $manager)
     {
         $tags = array('ocasion', 'bestseller', 'cat', 'rent');

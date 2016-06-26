@@ -2,9 +2,12 @@
 /**
  * Answers controller class.
  *
+ * @category Controller
+ * @package  AppBundle\Controller
  * @copyright (c) 2016 Wanda Sipel
  * @link http://wierzba.wzks.uj.edu.pl/~12_sipel/symfony_projekt/app_dev.php/answers
  */
+
 
 namespace AppBundle\Controller;
 
@@ -146,11 +149,11 @@ class AnswersController
     public function indexAction()
     {
         $answers = $this->answersModel->findAll();
-        // if (!$answers) {
-            // throw new NotFoundHttpException(
-                // $this->translator->trans('messages.not_found')
-            // );
-        // }
+        if (!$answers) {
+            throw new NotFoundHttpException(
+                $this->translator->trans('messages.not_found')
+            );
+        }
         return $this->templating->renderResponse(
             'AppBundle:Answers:index.html.twig',
             array('data' => $answers)
@@ -160,11 +163,12 @@ class AnswersController
     /**
      * View action.
      *
+     * @param Answer $answer Answer entity
+     *
      * @Route("/answers/view/{id}", name="answers-view")
      * @Route("/answers/view/{id}/")
      * @ParamConverter("answer", class="AppBundle:Answer")
      *
-     * @param Answer $answer Answer entity
      * @throws NotFoundHttpException
      * @return Response A Response instance
      */
@@ -185,6 +189,8 @@ class AnswersController
     /**
      * Users answers action.
      *
+     * @param array $request
+     *
      * @Route("/myanswers", name="user-answers")
      * @Route("/myanswers/")
      *
@@ -197,11 +203,11 @@ class AnswersController
         $user = $this->securityContext->getToken()->getUser();
         $id = $user->getId();
         $myanswers = $this->answersModel->findByUser($user);
-        // if (!$myanswers) {
-            // throw new NotFoundHttpException(
-                // $this->translator->trans('messages.questions_not_found')
-            // );
-        // }
+        if (!$myanswers) {
+            throw new NotFoundHttpException(
+                $this->translator->trans('messages.questions_not_found')
+            );
+        }
 
         return $this->templating->renderResponse(
             'AppBundle:Answers:profile.html.twig',
@@ -212,19 +218,20 @@ class AnswersController
     /**
      * Add action.
      *
+     * @param $question question entity
+     * @param $request
+     *
      * @Route("/questions/{id}/answer-add", name="answers-add")
      * @Route("/questions/{id}/answer-add/")
      * @ParamConverter("question", class="AppBundle:Question")
      *
-     * @param question $question question entity
-     * @param Request $request
      * @return Response A Response instance
      */
     public function addAction(Request $request, Question $question = null)
     {
         $id = (integer)$request->get('id', null);
         $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if(!$roleflag) {
+        if (!$roleflag) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.user')
@@ -244,10 +251,8 @@ class AnswersController
         }
 
         $user = $this->securityContext->getToken()->getUser();
-        // $user = $this->usersModel->findById('1');
         $answer = new Answer();
         $answer->setQuestion($question);
-        // $answer->setUser($user[0]);
         $answer->setUser($user);
     
         $answerForm = $this->formFactory->create(
@@ -284,67 +289,68 @@ class AnswersController
     /**
      * Edit action.
      *
+     * @param $answer Answer entity
+     * @param $request Request
+     *
      * @Route("/answers/edit/{id}", name="answers-edit")
      * @Route("/answers/edit/{id}/")
      * @ParamConverter("answer", class="AppBundle:Answer")
      *
-     * @param Answer $answer Answer entity
-     * @param Request $request
      * @return Response A Response instance
      */
-    // public function editAction(Request $request, Answer $answer = null)
-    // {
-        // $user = $this->securityContext->getToken()->getUser();
+    public function editAction(Request $request, Answer $answer = null)
+    {
+        $user = $this->securityContext->getToken()->getUser();
         
-        // if (!$answer) {
-            // $this->session->getFlashBag()->set(
-                // 'warning',
-                // $this->translator->trans('messages.not_found')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('answers-add')
-            // );
-        // }
+        if (!$answer) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('messages.not_found')
+            );
+            return new RedirectResponse(
+                $this->router->generate('answers-add')
+            );
+        }
 
-        // $answerForm = $this->formFactory->create(
-            // new AnswerType(),
-            // $answer,
-            // array(
-                // 'validation_groups' => 'answer-default',
-                // 'question_model' => $this->questionsModel
-            // )
-        // );
+        $answerForm = $this->formFactory->create(
+            new AnswerType(),
+            $answer,
+            array(
+                'validation_groups' => 'answer-default'
+            )
+        );
 
-        // $answerForm->handleRequest($request);
+        $answerForm->handleRequest($request);
 
-        // if ($answerForm->isValid()) {
-            // $answer = $answerForm->getData();
-            // $this->answersModel->save($answer);
-            // $this->session->getFlashBag()->set(
-                // 'success',
-                // $this->translator->trans('messages.success.edit')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('answers')
-            // );
-        // }
+        if ($answerForm->isValid()) {
+            $answer = $answerForm->getData();
+            $this->answersModel->save($answer);
+            $this->session->getFlashBag()->set(
+                'success',
+                $this->translator->trans('messages.success.edit')
+            );
+            return new RedirectResponse(
+                $this->router->generate('answers')
+            );
+        }
 
-        // return $this->templating->renderResponse(
-            // 'AppBundle:Answers:edit.html.twig',
-            // array('form' => $answerForm->createView())
-        // );
+        return $this->templating->renderResponse(
+            'AppBundle:Answers:edit.html.twig',
+            array('form' => $answerForm->createView())
+        );
 
-    // }
+    }
 
     /**
      * Delete action.
+     *
+     * @param $answer Answer entity
+     * @param $request Request
      *
      * @Route("/answers/delete/{id}", name="answers-delete")
      * @Route("/answers/delete/{id}/")
      * @ParamConverter("answer", class="AppBundle:Answer")
      *
-     * @param Answer $answer Answer entity
-     * @param Request $request
      * @return Response A Response instance
      */
     public function deleteAction(Request $request, Answer $answer = null)
@@ -362,7 +368,7 @@ class AnswersController
             );
         }
 
-        if($user != $author) {
+        if ($user != $author) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.yours')

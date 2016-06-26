@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * User Repository entity.
+ *
+ * @copyright (c) 2016 Wanda Sipel
+ * @link http://wierzba.wzks.uj.edu.pl/~12_sipel/symfony_projekt/app_dev.php/answers
+ */
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;

@@ -19,6 +19,13 @@ use AppBundle\Entity\Category;
  */
 class LoadCategoryData implements FixtureInterface
 {
+    /**
+     * Load function
+     *
+     * @param ObjectManager $manager Object manager
+     *
+     * @return mixed
+     */
     public function load(ObjectManager $manager)
     {
         $categories = array('flat', 'social', 'sell/buy', 'job');

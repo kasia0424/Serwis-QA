@@ -1,6 +1,5 @@
 Userzy
 - konto admina
-- rejestr rola
 
 Bezpieczeñstwo - catche, walidacja
 style

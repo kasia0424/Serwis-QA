@@ -280,6 +280,7 @@ class Question
 
     /**
      * Set category.
+     * @param \AppBundle\Entity\Category $category
      *
      * @return
      */

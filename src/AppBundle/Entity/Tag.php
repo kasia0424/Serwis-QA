@@ -188,6 +188,5 @@ class Tag
     public function delete($tag)
     {
         return $this->remove($tag);
-        //$this->sections->removeElement($sections);
     }
 }

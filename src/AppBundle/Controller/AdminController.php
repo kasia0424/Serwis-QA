@@ -23,6 +23,12 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use FOS\UserBundle\Form\Type\ProfileFormType;
+use Symfony\Component\Form\Forms;
+use AppBundle\Form\UserType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 /**
  * Class AdminController.
@@ -124,130 +130,12 @@ class AdminController
     public function indexAction()
     {
         $users = $this->usersModel->findAll();
-        // if (!$admin) {
-            // throw new NotFoundHttpException(
-                // $this->translator->trans('messages.not_found')
-            // );
-        // }
+
         return $this->templating->renderResponse(
             'AppBundle:Users:index.html.twig',
             array('data' => $users)
         );
     }
-
-    // /**
-     // * View action.
-     // *
-     // * @Route("/admin/view/{id}", name="admin-view")
-     // * @Route("/admin/view/{id}/")
-     // * @ParamConverter("admin", class="AppBundle:Admin")
-     // *
-     // * @param Admin $admin Admin entity
-     // * @throws NotFoundHttpException
-     // * @return Response A Response instance
-     // */
-    // public function viewAction(Admin $admin = null)
-    // {
-        // $question = $admin->getQuestion();
-        // if (!$admin) {
-            // throw new NotFoundHttpException(
-                // $this->translator->trans('messages.not_found')
-            // );
-        // }
-        // return $this->templating->renderResponse(
-            // 'AppBundle:Admin:view.html.twig',
-            // array('data' => $admin, 'question' => $question)
-        // );
-    // }
-
-    // /**
-     // * Users admin action.
-     // *
-     // * @Route("/myadmin", name="user-admin")
-     // * @Route("/myadmin/")
-     // *
-     // * @throws NotFoundHttpException
-     // * @return Response A Response instance
-     // */
-    // public function profileAction(Request $request)
-    // {
-        // $admin = $this->adminModel->findAll();
-        // $user = $this->securityContext->getToken()->getUser();
-        // $id = $user->getId();
-        // $myadmin = $this->adminModel->findByUser($user);
-        // if (!$myadmin) {
-            // throw new NotFoundHttpException(
-                // $this->translator->trans('messages.questions_not_found')
-            // );
-        // }
-
-        // return $this->templating->renderResponse(
-            // 'AppBundle:Admin:profile.html.twig',
-            // array('data' => $myadmin)
-        // );
-    // }
-
-    // /**
-     // * Add action.
-     // *
-     // * @Route("/questions/{id}/admin-add", name="admin-add")
-     // * @Route("/questions/{id}/admin-add/")
-     // * @ParamConverter("question", class="AppBundle:Question")
-     // *
-     // * @param question $question question entity
-     // * @param Request $request
-     // * @return Response A Response instance
-     // */
-    // public function addAction(Request $request, Question $question = null)
-    // {
-        // $id = (integer)$request->get('id', null);
-        // if (!$question) {
-            // $this->session->getFlashBag()->set(
-                // 'warning',
-                // $this->translator->trans('messages.not_found')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('questions-add')
-            // );
-        // }
-
-        // $user = $this->securityContext->getToken()->getUser();
-        // // $user = $this->usersModel->findById('1');
-        // $admin = new Admin();
-        // $admin->setQuestion($question);
-        // // $admin->setUser($user[0]);
-        // $admin->setUser($user);
-    
-        // $adminForm = $this->formFactory->create(
-            // new AdminType(),
-            // $admin,
-            // array(
-                // 'validation_groups' => 'admin-default'
-            // )
-        // );
-
-        // $adminForm->handleRequest($request);
-
-        // if ($adminForm->isValid()) {
-            // $admin = $adminForm->getData();
-            // $this->adminModel->save($admin);
-            // $this->session->getFlashBag()->set(
-                // 'success',
-                // $this->translator->trans('messages.success.add')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate(
-                    // 'questions-view',
-                    // array('id' => $id)
-                // )
-            // );
-        // }
-
-        // return $this->templating->renderResponse(
-            // 'AppBundle:Admin:add.html.twig',
-            // array('form' => $adminForm->createView())
-        // );
-    // }
 
     /**
      * Edit action.
@@ -255,7 +143,6 @@ class AdminController
      * @Route("/admin/user-edit/{id}", name="user-edit")
      * @Route("/admin/user-edit/{id}/")
      *
-     * @param Admin $admin Admin entity
      * @param Request $request
      * @return Response A Response instance
      */
@@ -264,7 +151,6 @@ class AdminController
         $id = (integer)$request->get('id', null);
         $usertab = $this->usersModel->findUserById($id);
         $user=$usertab[0];
-        // var_dump($user);die();
 
         $userForm = $this->formFactory->create(
             new ProfileFormType(),
@@ -273,14 +159,6 @@ class AdminController
                 'validation_groups' => 'profile-default'
             )
         );
-        
-        // $user = $this->container->get('security.context')->getToken()->getUser();
-        // if (!is_object($user) || !$user instanceof UserInterface) {
-            // throw new AccessDeniedException('This user does not have access to this section.');
-        // }
-
-        // $form = $this->get('fos_user.profile.form');
-        // $formHandler = $this->get('fos_user.profile.form.handler');
 
         $process = $formHandler->process($user);
         if ($process) {
@@ -294,111 +172,71 @@ class AdminController
             array('form' => $form->createView())
         );
     }
-    // /**
-     // * Edit action.
-     // *
-     // * @Route("/admin/edit/{id}", name="admin-edit")
-     // * @Route("/admin/edit/{id}/")
-     // * @ParamConverter("admin", class="AppBundle:Admin")
-     // *
-     // * @param Admin $admin Admin entity
-     // * @param Request $request
-     // * @return Response A Response instance
-     // */
-    // public function editAction(Request $request, Admin $admin = null)
-    // {
-        // if (!$admin) {
-            // $this->session->getFlashBag()->set(
-                // 'warning',
-                // $this->translator->trans('messages.not_found')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('admin-add')
-            // );
-        // }
 
-        // $adminForm = $this->formFactory->create(
-            // new AdminType(),
-            // $admin,
-            // array(
-                // 'validation_groups' => 'admin-default',
-                // 'question_model' => $this->questionsModel
-            // )
-        // );
+    /**
+     * Change role action.
+     *
+     * @Route("/admin/user-role/{id}", name="user-role")
+     * @Route("/admin/user-role/{id}/")
+     *
+     * @param Request $request
+     * @return Response A Response instance
+     */
+    public function roleAction(Request $request)
+    {
+        $id = (integer)$request->get('id', null);
+        $user = $this->usersModel->findById($id);
+        if (!$user) {
+            $this->session->getFlashBag()->set(
+                'warning',
+                $this->translator->trans('messages.not_found')
+            );
+            return new RedirectResponse(
+                $this->router->generate('admin')
+            );
+        }
 
-        // $adminForm->handleRequest($request);
+        $userForm = $this->formFactory->create(
+            new UserType(),
+            null,
+            array(
+                'validation_groups' => 'admin-delete'
+            )
+        );
+        // $form = $formFactory->createBuilder()
+            // ->add('User', 'submit')
+            // ->add('Admin', 'submit')
+            // ->getForm();
 
-        // if ($adminForm->isValid()) {
-            // $admin = $adminForm->getData();
-            // $this->adminModel->save($admin);
-            // $this->session->getFlashBag()->set(
-                // 'success',
-                // $this->translator->trans('messages.success.edit')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('admin')
-            // );
-        // }
 
-        // return $this->templating->renderResponse(
-            // 'AppBundle:Admin:edit.html.twig',
-            // array('form' => $adminForm->createView())
-        // );
+        $userForm->handleRequest($request);
 
-    // }
+        if ($userForm->isValid()) {
+            $user = $userForm->getData();
+            if ($userForm->get('User')->isClicked()) {
+                $user->setIsAdmin('false');
+            } else {
+                $user->setIsAdmin('true');
+            }
+            $em = $this->get("doctrine.orm.entity_manager");
+            $this->em->persist($user);
+            $this->em->flush();
+            $this->session->getFlashBag()->set(
+                'success',
+                $this->translator->trans('messages.success.delete')
+            );
+            return new RedirectResponse(
+                $this->router->generate('admin')
+            );
+        }
 
-    // /**
-     // * Delete action.
-     // *
-     // * @Route("/admin/delete/{id}", name="admin-delete")
-     // * @Route("/admin/delete/{id}/")
-     // * @ParamConverter("admin", class="AppBundle:Admin")
-     // *
-     // * @param Admin $admin Admin entity
-     // * @param Request $request
-     // * @return Response A Response instance
-     // */
-    // public function deleteAction(Request $request, Admin $admin = null)
-    // {
-        // if (!$admin) {
-            // $this->session->getFlashBag()->set(
-                // 'warning',
-                // $this->translator->trans('messages.not_found')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('admin')
-            // );
-        // }
+        return $this->templating->renderResponse(
+            'AppBundle:Users:role.html.twig',
+            array(
+                'form' => $userForm->createView(),
+                'user' => $user
+            )
+        );
 
-        // $adminForm = $this->formFactory->create(
-            // new AdminType(),
-            // $admin,
-            // array(
-                // 'validation_groups' => 'admin-delete'
-            // )
-        // );
-
-        // $adminForm->handleRequest($request);
-
-        // if ($adminForm->isValid()) {
-            // $admin = $adminForm->getData();
-            // $this->adminModel->delete($admin);
-            // $this->session->getFlashBag()->set(
-                // 'success',
-                // $this->translator->trans('messages.success.delete')
-            // );
-            // return new RedirectResponse(
-                // $this->router->generate('admin')
-            // );
-        // }
-
-        // return $this->templating->renderResponse(
-            // 'AppBundle:Admin:delete.html.twig',
-            // array(
-                // 'form' => $adminForm->createView(),
-                // 'admin' => $admin
-            // )
-        // );
-
-    // }
+    }
 }

@@ -181,8 +181,9 @@ class TagsController
      */
     public function addAction(Request $request)
     {
-        $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if($roleflag) {
+        $user = $this->securityContext->getToken()->getUser();
+        $role = $user->getIsAdmin();
+        if (!$role) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.admin')
@@ -227,14 +228,15 @@ class TagsController
      * @Route("/tags/edit/{id}/")
      * @ParamConverter("tag", class="AppBundle:Tag")
      *
-     * @param Tag $tag Tag entity
-     * @param Request $request
+     * @param $tag Tag entity
+     * @param $request
      * @return Response A Response instance
      */
     public function editAction(Request $request, Tag $tag = null)
     {
-        $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if($roleflag) {
+        $user = $this->securityContext->getToken()->getUser();
+        $role = $user->getIsAdmin();
+        if (!$role) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.admin')
@@ -290,14 +292,15 @@ class TagsController
      * @Route("/tags/delete/{id}/")
      * @ParamConverter("tag", class="AppBundle:Tag")
      *
-     * @param Tag $tag Tag entity
-     * @param Request $request
+     * @param $tag Tag entity
+     * @param $request
      * @return Response A Response instance
      */
     public function deleteAction(Request $request, Tag $tag = null)
     {
-        $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if($roleflag) {
+        $user = $this->securityContext->getToken()->getUser();
+        $role = $user->getIsAdmin();
+        if (!$role) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.admin')

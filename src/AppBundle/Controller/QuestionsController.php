@@ -117,14 +117,6 @@ class QuestionsController
      * @var FormFactory $q_formFactory
      */
     private $q_formFactory;
-    
-    /**
-     * Form factory.
-     *
-     * @var FormFactory $a_formFactory
-     */
-    private $a_formFactory;
-    
 
     /**
      * QuestionsController constructor.
@@ -140,7 +132,6 @@ class QuestionsController
      * @param ObjectRepository $answersModel Model object
      * @param ObjectRepository $usersModel Model object
      * @param FormFactory $q_formFactory Form factory
-     * @param FormFactory $a_formFactory Form factory
      */
     public function __construct(
         Translator $translator,
@@ -153,8 +144,7 @@ class QuestionsController
         ObjectRepository $categoriesModel,
         ObjectRepository $answersModel,
         ObjectRepository $usersModel,
-        FormFactory $q_formFactory,
-        FormFactory $a_formFactory
+        FormFactory $q_formFactory
     ) {
         $this->translator = $translator;
         $this->templating = $templating;
@@ -167,26 +157,6 @@ class QuestionsController
         $this->answersModel = $answersModel;
         $this->usersModel = $usersModel;
         $this->q_formFactory = $q_formFactory;
-        $this->a_formFactory = $a_formFactory;
-        
-        // $this->securityContext = $securityContext;
-        // $token = $securityContext->getToken();
-        
-         // if (null !== $token && is_object($token->getUser())) {
-            // $this->current_user = $token->getUser();
-            // $user_id = $this->current_user->getUsername();
-
-
-            // $login = $this->userModel->findOneByUsername($user_id);
-            // $this->user_author = $login;
-          // //  var_dump($user_id);
-          // //  var_dump($login);
-          // //  die();
-        // } else {
-            // $this->current_user = null;
-        // }
-
-
     }
 
     /**
@@ -195,6 +165,7 @@ class QuestionsController
      * @Route("/questions", name="questions")
      * @Route("/questions/")
      *
+     * @param Request $request
      * @throws NotFoundHttpException
      * @return Response A Response instance
      */
@@ -206,15 +177,7 @@ class QuestionsController
                 $this->translator->trans('messages.questions_not_found')
             );
         }
-        // $paginator  = $this->get('knp_paginator');
-        // $pagination = $paginator->paginate(
-            // $questions, /* query NOT result */
-            // $request->query->getInt('page', 1)/*page number*/,
-            // 10/*limit per page*/
-        // );
 
-        // parameters to template
-        // return $this->render('AppBundle:Questions:index2.html.twig', array('pagination' => $pagination));
         return $this->templating->renderResponse(
             'AppBundle:Questions:index.html.twig',
             array('data' => $questions)
@@ -251,6 +214,7 @@ class QuestionsController
     
     /**
      * Users questions action.
+     * @param Request $request Request
      *
      * @Route("/myquestions", name="user-questions")
      * @Route("/myquestions/")
@@ -288,7 +252,7 @@ class QuestionsController
     public function addAction(Request $request)
     {
         $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if(!$roleflag) {
+        if (!$roleflag) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.user')
@@ -335,19 +299,20 @@ class QuestionsController
     /**
      * Edit action.
      *
+     * @param $question question entity
+     * @param $request
+     *
      * @Route("/questions/edit/{id}", name="questions-edit")
      * @Route("/questions/edit/{id}/")
      * @ParamConverter("question", class="AppBundle:question")
      *
-     * @param question $question question entity
-     * @param Request $request
      * @return Response A Response instance
      */
     public function editAction(Request $request, question $question = null)
     {
         $user = $this->securityContext->getToken()->getUser();
         $author = $question->getUser();
-        if($user != $author) {
+        if ($user != $author) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.yours')
@@ -405,15 +370,15 @@ class QuestionsController
      * @Route("/questions/delete/{id}/")
      * @ParamConverter("question", class="AppBundle:question")
      *
-     * @param question $question question entity
-     * @param Request $request
+     * @param $question Question entity
+     * @param $request Request
      * @return Response A Response instance
      */
     public function deleteAction(Request $request, question $question = null)
     {
         $user = $this->securityContext->getToken()->getUser();
         $author = $question->getUser();
-        if($user != $author) {
+        if ($user != $author) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.yours')

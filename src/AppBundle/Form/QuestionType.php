@@ -59,14 +59,6 @@ class QuestionType extends AbstractType
                     'max_length' => 128,
                 )
             );
-            // $builder->add(
-                // $builder
-                    // ->create('tags', 'text')
-                    // ->addModelTransformer($tagDataTransformer),
-                // array(
-                    // 'required'   => false,
-                // )
-            // );
             $builder->add(
                 'tags',
                 'entity',
@@ -82,21 +74,13 @@ class QuestionType extends AbstractType
                 'category',
                 'entity',
                 array(
-                    // query choices from this entity
                     'class' => 'AppBundle:Category',
-                    // use the User.username property as the visible option string
                     'property' => 'name',
-                    // used to render a select box, check boxes or radios
                     'multiple' => false,
                     'expanded' => true,
                     'empty_data'  => null
                 )
             );
-            // $builder->add(
-                // $builder
-                    // ->create('categories', 'text')
-                    // ->addModelTransformer($categoryDataTransformer)
-            // );
         }
         $builder->add(
             'save',

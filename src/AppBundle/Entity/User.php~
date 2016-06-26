@@ -35,6 +35,14 @@ class User extends BaseUser
      * )
      */
     protected $birthdate;
+
+    /**
+     * @ORM\Column(
+     *      name="isAdmin",
+     *      type="boolean"
+     * )
+     */
+    protected $isAdmin;
     
     /**
      * Questions array
@@ -63,11 +71,10 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        // your own logic
         $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->answers = new \Doctrine\Common\Collections\ArrayCollection();
         $this->roles = array('ROLE_USER');
-        parent::__construct();
+        $this->isAdmin = false;
     }
 
     /**
@@ -174,38 +181,30 @@ class User extends BaseUser
         return $this->birthdate;
     }
     
-    // public function addRole($role)
-    // {
-        // $role = strtoupper($role);
-        // if ($role === static::ROLE_USER) {
-            // return $this;
-        // }
+    public function addRole($role)
+    {
+        $role = strtoupper($role);
+        if ($role === static::ROLE_USER) {
+            return $this;
+        }
 
         // if (!in_array($role, $this->roles, true)) {
             // $this->roles[] = $role;
         // }
 
-        // return $this;
-    // }
+        return $this;
+    }
     
-    // /**
-     // * Returns the user roles
-     // *
-     // * @return array The roles
-     // */
-    // public function getRoles()
-    // {
-        // $roles = $this->roles;
+    public function setRoles(array $roles)
+    {
+        $this->roles = array('ROLE_USER');
 
-        // foreach ($this->getGroups() as $group) {
-            // $roles = array_merge($roles, $group->getRoles());
-        // }
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
 
-        // // we need to make sure to have at least one role
-        // $roles[] = static::ROLE_USER;
-
-        // return array_unique($roles);
-    // }
+        return $this;
+    }
 
     /**
      * Plain password. Used for model validation. Must not be persisted.
@@ -291,5 +290,28 @@ class User extends BaseUser
     public function getAnswers()
     {
         return $this->answers;
+    }
+
+    /**
+     * Set isAdmin
+     *
+     * @param boolean $isAdmin
+     * @return User
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    /**
+     * Get isAdmin
+     *
+     * @return boolean 
+     */
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
     }
 }

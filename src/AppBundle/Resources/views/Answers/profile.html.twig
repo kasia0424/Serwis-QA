@@ -27,7 +27,7 @@
                     <td>
                         <a href="{{ url('answers-view', { 'id' : row.id }) }}" title="view">{{'view'|trans}}</a><br/>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == row.user.id %} 
-                            <a href="{{ url('answers-edit', { 'id' : row.id }) }}" title="edit">{{'edit'|trans}}</a><br/>
+                            {#<a href="{{ url('answers-edit', { 'id' : row.id }) }}" title="edit">{{'edit'|trans}}</a><br/>#}
                             <a href="{{ url('answers-delete', { 'id' : row.id }) }}" title="delete">{{'delete'|trans}}</a>
                         {% endif %}
                     </td>

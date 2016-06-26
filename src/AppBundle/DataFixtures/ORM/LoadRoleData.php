@@ -19,6 +19,13 @@ use AppBundle\Entity\Role;
  */
 class LoadRoleData implements FixtureInterface
 {
+    /**
+     * Load function
+     *
+     * @param ObjectManager $manager Object manager
+     *
+     * @return mixed
+     */
     public function load(ObjectManager $manager)
     {
         $roles = array('ROLE_USER', 'ROLE_ADMIN');

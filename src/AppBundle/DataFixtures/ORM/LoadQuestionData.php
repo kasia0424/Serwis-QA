@@ -19,6 +19,13 @@ use AppBundle\Entity\Question;
  */
 class LoadQuestionData implements FixtureInterface
 {
+    /**
+     * Load function
+     *
+     * @param ObjectManager $manager Object manager
+     *
+     * @return mixed
+     */
     public function load(ObjectManager $manager)
     {
         $question = new Question();

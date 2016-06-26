@@ -171,8 +171,9 @@ class CategoriesController
      */
     public function addAction(Request $request)
     {
-        $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if($roleflag) {
+        $user = $this->securityContext->getToken()->getUser();
+        $role = $user->getIsAdmin();
+        if (!$role) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.admin')
@@ -217,15 +218,15 @@ class CategoriesController
      * @Route("/categories/edit/{id}/")
      * @ParamConverter("category", class="AppBundle:category")
      *
-     * @param category $category category entity
-     * @param Request $request
+     * @param $category Category entity
+     * @param $request
      * @return Response A Response instance
      */
     public function editAction(Request $request, category $category = null)
     {
-        $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        // var_dump($roleflag);
-        if($roleflag) {
+        $user = $this->securityContext->getToken()->getUser();
+        $role = $user->getIsAdmin();
+        if (!$role) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.admin')
@@ -281,14 +282,15 @@ class CategoriesController
      * @Route("/categories/delete/{id}/")
      * @ParamConverter("category", class="AppBundle:category")
      *
-     * @param category $category category entity
-     * @param Request $request
+     * @param $category Category entity
+     * @param $request
      * @return Response A Response instance
      */
     public function deleteAction(Request $request, category $category = null)
     {
-        $roleflag = $this->securityContext->isGranted('ROLE_USER');
-        if($roleflag) {
+        $user = $this->securityContext->getToken()->getUser();
+        $role = $user->getIsAdmin();
+        if (!$role) {
             $this->session->getFlashBag()->set(
                 'warning',
                 $this->translator->trans('not.admin')

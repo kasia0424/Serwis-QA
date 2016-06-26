@@ -174,12 +174,24 @@ class Answer
     {
         return $this->date;
     }
-    
+
+    /**
+     * Get questions.
+     *
+     * @access public
+     * @return Answer
+     */
     public function getQuestion()
     {
         return $this->question;
     }
 
+    /**
+     * Set question
+     *
+     * @param \AppBundle\Entity\Queston $question
+     * @return Answer
+     */
     public function setQuestion(Question $question)
     {
         $this->question = $question;

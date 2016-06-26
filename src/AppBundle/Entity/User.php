@@ -1,4 +1,10 @@
 <?php
+/**
+ * User entity.
+ *
+ * @copyright (c) 2016 Wanda Sipel
+ * @link http://wierzba.wzks.uj.edu.pl/~12_sipel/symfony_projekt/app_dev.php/login
+ */
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -6,6 +12,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use FOS\UserBundle\Entity\User as BaseUser;
 
 /**
+ * Class User.
+ *
+ * @package Model
+ * @author WS
+ *
  * @ORM\Table(name="qa_users")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
  */
@@ -28,6 +39,8 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * Birthdate
+     *
      * @ORM\Column(
      *      name="birthdate",
      *      type="datetime",
@@ -35,6 +48,16 @@ class User extends BaseUser
      * )
      */
     protected $birthdate;
+
+    /**
+     * isAdmin
+     *
+     * @ORM\Column(
+     *      name="isAdmin",
+     *      type="boolean"
+     * )
+     */
+    protected $isAdmin;
     
     /**
      * Questions array
@@ -60,12 +83,16 @@ class User extends BaseUser
      */
     protected $answers;
     
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->answers = new \Doctrine\Common\Collections\ArrayCollection();
         $this->roles = array('ROLE_USER');
+        $this->isAdmin = false;
     }
 
     /**
@@ -171,7 +198,13 @@ class User extends BaseUser
     {
         return $this->birthdate;
     }
-    
+
+    /**
+     * Add Roles
+     *
+     * @param string $role
+     * @return User
+     */
     public function addRole($role)
     {
         $role = strtoupper($role);
@@ -179,13 +212,15 @@ class User extends BaseUser
             return $this;
         }
 
-        // if (!in_array($role, $this->roles, true)) {
-            // $this->roles[] = $role;
-        // }
-
         return $this;
     }
     
+    /**
+     * Set Roles
+     *
+     * @param array $roles
+     * @return User
+     */
     public function setRoles(array $roles)
     {
         $this->roles = array('ROLE_USER');
@@ -195,45 +230,6 @@ class User extends BaseUser
         }
 
         return $this;
-    }
-    
-    // /**
-     // * Returns the user roles
-     // *
-     // * @return array The roles
-     // */
-    // public function getRoles()
-    // {
-        // $roles = $this->roles;
-
-        // foreach ($this->getGroups() as $group) {
-            // $roles = array_merge($roles, $group->getRoles());
-        // }
-
-        // // we need to make sure to have at least one role
-        // $roles[] = static::ROLE_USER;
-
-        // return array_unique($roles);
-    // }
-
-    /**
-     * Plain password. Used for model validation. Must not be persisted.
-     *
-     * @var string
-     */
-    protected $plainPassword;
-    
-    public function setPlainPassword($password)
-    {
-        $this->plainPassword = $password;
-
-        return $this;
-    }
-
-    public function getPlainPassword()
-    {
-
-        return $this->plainPassword;
     }
 
     /**
@@ -300,5 +296,28 @@ class User extends BaseUser
     public function getAnswers()
     {
         return $this->answers;
+    }
+
+    /**
+     * Set isAdmin
+     *
+     * @param boolean $isAdmin
+     * @return User
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    /**
+     * Get isAdmin
+     *
+     * @return boolean
+     */
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
     }
 }
