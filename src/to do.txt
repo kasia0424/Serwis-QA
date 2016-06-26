@@ -1,10 +1,6 @@
 Userzy
 - konto admina
 
-Bezpieczeñstwo - catche, walidacja
-style
-paginacja??
-
 Tagi
 - ograniczona iloœæ wyœwietlonych?
 
